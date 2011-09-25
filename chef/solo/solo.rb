@@ -3,7 +3,7 @@
 # IMPORTANT: The file_cache and cookbooks must be absolute paths.
 
 # Parent directory as an absolute path 
-PARENT_DIR = File.expand_path('..')
+PARENT_DIR = File.expand_path('../..')
 
 # The root of the local or remote location of the cookbooks
 file_cache_path PARENT_DIR
