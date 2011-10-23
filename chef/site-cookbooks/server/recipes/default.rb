@@ -15,24 +15,6 @@ node['authorization']['sudo']['users'] =
         node['deployer_user']['username'] = 'deploy'
 node['deployer_user']['password_hash'] = 'deploy_pw'
 
-node['rvm']['global_gems'] = [
-  { 'name'    => 'bundler',
-    'version' => '1.1.pre.8' },
-  { 'name'    => 'ruby-shadow' }, # set password of user with ruby
-  { 'name'    => 'rake',
-    'version' => '0.9.2' },
-  { 'name' => 'vagrant',
-    'version' => '0.8.6' },
-  { 'name' => 'chef',
-    'version' => '0.10.4' }
-]
-
-#node['rvm']['gems'] = {
-#  'ruby-1.9.2-p290@framework' => [
-#    {  }
-#  ]
-#}
-
 node['rvm']['rvmrc'] = {
   'rvm_project_rvmrc'             => 1,
   'rvm_gemset_create_on_use_flag' => 1,
@@ -50,9 +32,9 @@ node['mysql'] = {
             "net_write_timeout" => "30"}
 }
 
-node['rvm']['vagrant']['system_chef_solo'] = "/usr/local/rvm/gems/ruby-1.9.2-p290@global/bin/chef-solo"
-#node[:ruby][:bin_path]
-#node[:languages][:ruby][:bin_dir]
+# rvm specifics
+node['rvm']['user_default_ruby'] = node['rvm']['default_ruby']
+node['rvm']['vagrant']['system_chef_solo'] = "/usr/local/rvm/gems/#{node['rvm']['default_ruby']}@global/bin/chef-solo"
 
 require_recipe "mysql"
 include_recipe "mysql::server"
@@ -70,8 +52,8 @@ include_recipe "rvm::system"
 include_recipe "rvm::vagrant"
 
 # Recipes for standard server
-#include_recipe 'framework::deployer_user'
-include_recipe 'framework::bash_support'
+#include_recipe 'server::deployer_user'
+include_recipe 'server::bash_support'
 
 
 # curl https://raw.github.com/spf13/spf13-vim/master/bootstrap.sh -o - | sh
