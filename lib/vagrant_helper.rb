@@ -6,14 +6,22 @@ module Automation
   CONFIG_DIR='config' unless defined? CONFIG_DIR
 
   # Methods for working with Chef. 
-  class VagrantHelper
-    def self.json_path(node_name)
+  module VagrantHelper
+    def json_path(node_name)
       File.join(CONFIG_DIR, "#{node_name}.json")
     end
 
-    def self.node_settings(node_name)
-      json = File.read(self.json_path(node_name))
+    def node_settings(node_name)
+      json = File.read(json_path(node_name))
       JSON.parse(json)
+    end
+
+    def vagrant?
+      node['deployer_user']['username'] == 'vagrant'
+    end
+
+    def debug?
+      ENV['DEBUG'] != nil
     end
   end
 end

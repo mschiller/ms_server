@@ -1,2 +1,2 @@
-set_unless[:deployer_user][:username] = 'deploy'
-set_unless[:deployer_user][:password_hash] = ''
+default[:deployer_user][:username] = 'deploy'
+default[:deployer_user][:password_hash] = '$1$FahaXsKz$FW1rPRGcyihxxcLjiPP4A0'

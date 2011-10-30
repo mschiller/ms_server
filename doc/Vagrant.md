@@ -20,6 +20,9 @@
 ## Installation
 
 alias vagrant="bundle exec vagrant"
+alias vssh="bundle exec vagrant ssh"
+alias vr="bundle exec vagrant resume"
+alias vs="bundle exec vagrant ssh"
 
 `git submodule init && git submodule update
 # NOTE: Make sure you've installed VirtualBox first!

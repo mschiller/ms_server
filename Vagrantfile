@@ -2,71 +2,81 @@
 $LOAD_PATH << File.expand_path(File.join('..', 'lib'), __FILE__)
 require 'vagrant_helper'
 
-Vagrant::Config.run do |config|
+Vagrant::Config.run do |web_config|
+  include Automation::VagrantHelper
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
-  node = Automation::VagrantHelper.node_settings('config.server')
+  #fixme config.vm.define :web do |web_config|
 
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu-1104-server-i386"
+    node = node_settings('config.server')
+    node[:public_ssh_key] = IO.readlines("#{ENV['HOME']}/.ssh/id_rsa.pub").first
 
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  # config.vm.box_url = "http://domain.com/path/to/above.box"
+    # Every Vagrant virtual environment requires a box to build off of.
+    web_config.vm.box = 'ubuntu-1104-server-i386'
 
-  # Boot with a GUI so you can see the screen. (Default is headless)
-  #config.vm.boot_mode = :gui
+    # # Assign this VM to a host only network IP, allowing you to access it via the IP.
+    #web_config.vm.network("192.168.1.250") # , :netmask => "255.255.0.0")
 
-  # Assign this VM to a host only network IP, allowing you to access it via the IP.
-  # config.vm.network "33.33.33.10"
+    # The url from where the 'web_config.vm.box' box will be fetched if it
+    # doesn't already exist on the user's system.
+    #web_config.vm.box_url = "http://domain.com/path/to/above.box"
 
-  config.vm.customize do |vm|
-    vm.name        = "framework_test_env"
-    vm.memory_size = 512
-  end
+    # Boot with a GUI so you can see the screen. (Default is headless)
+    if debug?
+      web_config.vm.boot_mode = :gui
+    end
 
-  # Enable provisioning with chef solo, specifying a cookbooks path (relative
-  # to this Vagrantfile), and adding some recipes and/or roles.
-  config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = [ File.join(File.expand_path('..', __FILE__), 'chef', 'site-cookbooks') ]
-    chef.add_recipe "server"
+    web_config.vm.customize do |vm|
+      vm.name        = "framework_test_env"
+      vm.memory_size = 512
+    end
 
-    # Additional Chef settings
-    # merge is used to preserve the default JSON configuration,
-    # otherwise it'll all be overwritten
-    chef.json.merge!(node)
+    # Enable provisioning with chef solo, specifying a cookbooks path (relative
+    # to this Vagrantfile), and adding some recipes and/or roles.
+    web_config.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = [ File.join(File.expand_path('..', __FILE__), 'chef', 'site-cookbooks') ]
+      chef.add_recipe "server"
 
-    # specified cookbooks directory as a shared folder on the virtual machine
-    chef.provisioning_path = "/tmp/vagrant-chef"
+      # Additional Chef settings
+      # merge is used to preserve the default JSON configuration,
+      # otherwise it'll all be overwritten
+      chef.json.merge!(node)
 
-    # The roles path will be expanded relative to the project directory
-    #chef.roles_path = "roles"
-    #chef.add_role("web")
+      # specified cookbooks directory as a shared folder on the virtual machine
+      chef.provisioning_path = "/tmp/vagrant-chef"
 
-    chef.log_level      = :debug # :info
+      # The roles path will be expanded relative to the project directory
+      #chef.roles_path = "roles"
+      #chef.add_role("web")
 
-  end
+      chef.log_level = debug? ? :debug : :info
 
-  #config.ssh.private_key_path = File.expand_path(File.join('..', 'config', 'vagrant.key'), __FILE__)
+    end
 
-  # Forward a port from the guest to the host, which allows for outside
-  # computers to access the VM, whereas host only networking does not.
+    #todo web_config.ssh.private_key_path = File.expand_path(File.join('..', 'config', 'vagrant.key'), __FILE__)
 
-  # Forward a port from the guest to the host, which allows for outside
-  # computers to access the VM, whereas host only networking does not.
-  config.vm.forward_port("web", 80, 8880) # Connect HTTP Web server port of VM to localhost:8880
-  config.vm.forward_port("ssl", 443, 8443) # connect HTTPS Web server port of VM to localhost:8443
-  config.vm.forward_port("ftp", 21, 4567)
-  config.vm.forward_port("ssh", 22, node['ssh']['port'].to_i, :auto => true)
-  config.vm.forward_port("mysql", 3306, 3307)
+    # Forward a port from the guest to the host, which allows for outside
+    # computers to access the VM, whereas host only networking does not.
 
-  # Share an additional folder to the guest VM. The first argument is
-  # an identifier, the second is the path on the guest to mount the
-  # folder, and the third is the path on the host to the actual folder.
-  # set current project folder for work with passenger
-  #config.vm.share_folder("server_config", File.expand_path(File.join('.'), __FILE__))
+    # Forward a port from the guest to the host, which allows for outside
+    # computers to access the VM, whereas host only networking does not.
+    web_config.vm.forward_port("web", 80, 8880)
+    web_config.vm.forward_port("ssl", 443, 8443)
+    web_config.vm.forward_port("ftp", 21, 8821)
+    web_config.vm.forward_port("ssh", 22, node['ssh']['port'].to_i, :auto => true)
+    web_config.vm.forward_port("mysql", 3306, 3307)
+    web_config.vm.forward_port("solr", 8981, 8984)
+
+    # Share an additional folder to the guest VM. The first argument is
+    # an identifier, the second is the path on the guest to mount the
+    # folder, and the third is the path on the host to the actual folder.
+    # set current project folder for work with passenger
+    #web_config.vm.share_folder("server_config", File.expand_path(File.join('.'), __FILE__))
+
+  #end
+end
 
   # Enable provisioning with Puppet stand alone.  Puppet manifests
   # are contained in a directory path relative to this Vagrantfile.
@@ -113,4 +123,3 @@ Vagrant::Config.run do |config|
   # chef-validator, unless you changed the configuration.
   #
   #   chef.validation_client_name = "ORGNAME-validator"
-end
