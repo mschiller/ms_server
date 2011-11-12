@@ -5,6 +5,8 @@ gem 'vagrant', '0.8.2'
 gem 'virtualbox', '0.9.2'
 gem 'veewee', '0.2.0'
 
+gem 'capistrano'
+
 # chef
 gem 'chef'
 gem 'net-ssh'

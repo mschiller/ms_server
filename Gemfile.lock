@@ -5,6 +5,12 @@ GEM
     archive-tar-minitar (0.5.2)
     builder (3.0.0)
     bunny (0.7.8)
+    capistrano (2.9.0)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
     chef (0.8.10)
       bunny (>= 0.6.0)
       erubis
@@ -53,6 +59,8 @@ GEM
     multi_json (1.0.3)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
+    net-sftp (2.0.5)
+      net-ssh (>= 2.0.9)
     net-ssh (2.1.4)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
@@ -109,6 +117,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  capistrano
   chef
   fog
   highline

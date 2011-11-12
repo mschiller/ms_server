@@ -8,8 +8,12 @@ PARENT_DIR = File.expand_path('../..')
 # The root of the local or remote location of the cookbooks
 file_cache_path PARENT_DIR
 
+file_store_path PARENT_DIR
+
+Chef::Log::Formatter.show_time = false
+
 # The specific cookbook repositories to use
 cookbook_path [File.join(PARENT_DIR, 'site-cookbooks')]
 
 # Log detail
-#log_level :debug # :info
+log_level :debug # :info

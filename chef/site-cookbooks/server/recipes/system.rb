@@ -8,6 +8,3 @@ execute "change ssh config" do
 
   #command "ruby -pi.bak -e \"gsub(/oldtext/, 'newtext')\" *.txt"
 end
-
-include_recipe 'server::deployer_user'
-include_recipe 'server::bash_support'

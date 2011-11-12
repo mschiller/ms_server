@@ -53,9 +53,3 @@ file "#{user_home}/.rbenv/default" do
   content node['rbenv']['default_ruby']
   action :create
 end
-
-# fixme install as user with rbenv version
-install_gems :global_gems => node['rbenv']['global_gems'],
-             :gems => node['rbenv']['gems'],
-             :user => username
-

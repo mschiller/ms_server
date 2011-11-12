@@ -8,6 +8,10 @@ execute "reload bash" do
   command "exec $SHELL"
 end
 
+template "/etc/sudoers" do
+  source "sudoers.erb"
+end
+
 # Creates user account for deployment
 user node[:deployer_user][:username] do
   comment "Deployment account"

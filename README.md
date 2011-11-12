@@ -13,12 +13,16 @@ change gems/veewee-0.2.0/lib/veewee/session.rb:263 "localhost" => "127.0.0.1" an
 - bundler
 - https://github.com/jamis/rbenv-gemset
 - http://vagrantup.com/docs/commands.html => ssh_config
+- multi server
 
 - https://github.com/abtris/vagrant-hudson
 
+# Links
+
+- http://wiki.opscode.com/display/chef/Resources
+
 - http://wiki.opscode.com/display/chef/Custom+Knife+Bootstrap+Script
 - http://wiki.opscode.com/display/chef/Deploy+Resource
-- http://wiki.opscode.com/display/chef/Resources#Resources-RemoteFile
 - http://blog.afistfulofservers.net/post/3902042503/a-brief-chef-tutorial-from-concentrate
 - http://shapeshed.com/journal/using-rbenv-to-manage-rubies/
 

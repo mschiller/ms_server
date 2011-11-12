@@ -2,22 +2,22 @@
 $LOAD_PATH << File.expand_path(File.join('..', 'lib'), __FILE__)
 require 'vagrant_helper'
 
-Vagrant::Config.run do |web_config|
+Vagrant::Config.run do |config|
   include Automation::VagrantHelper
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
-  #fixme config.vm.define :web do |web_config|
+  config.vm.define :application_server do |web_config|
 
-    node = node_settings('config.server')
-    node[:public_ssh_key] = IO.readlines("#{ENV['HOME']}/.ssh/id_rsa.pub").first
+    node = node_settings('config.vagrant')
+    node[:public_ssh_key] = `cat ~/.ssh/id_rsa.pub`
 
     # Every Vagrant virtual environment requires a box to build off of.
-    web_config.vm.box = 'ubuntu-1104-server-i386'
+    web_config.vm.box = 'ubuntu-1004-server-i386'
 
     # # Assign this VM to a host only network IP, allowing you to access it via the IP.
-    #web_config.vm.network("192.168.1.250") # , :netmask => "255.255.0.0")
+    web_config.vm.network("192.168.1.2", :netmask => "255.255.255.0")
 
     # The url from where the 'web_config.vm.box' box will be fetched if it
     # doesn't already exist on the user's system.
@@ -29,7 +29,7 @@ Vagrant::Config.run do |web_config|
     end
 
     web_config.vm.customize do |vm|
-      vm.name        = "framework_test_env"
+      vm.name        = "application_server"
       vm.memory_size = 512
     end
 
@@ -37,6 +37,7 @@ Vagrant::Config.run do |web_config|
     # to this Vagrantfile), and adding some recipes and/or roles.
     web_config.vm.provision :chef_solo do |chef|
       chef.cookbooks_path = [ File.join(File.expand_path('..', __FILE__), 'chef', 'site-cookbooks') ]
+      chef.add_recipe 'server::deployer_user'
       chef.add_recipe "server"
 
       # Additional Chef settings
@@ -66,8 +67,8 @@ Vagrant::Config.run do |web_config|
     web_config.vm.forward_port("ssl", 443, 8443)
     web_config.vm.forward_port("ftp", 21, 8821)
     web_config.vm.forward_port("ssh", 22, node['ssh']['port'].to_i, :auto => true)
-    web_config.vm.forward_port("mysql", 3306, 3307)
-    web_config.vm.forward_port("solr", 8981, 8984)
+    #web_config.vm.forward_port("mysql", 3306, 3333)
+    #web_config.vm.forward_port("solr", 8981, 9984)
 
     # Share an additional folder to the guest VM. The first argument is
     # an identifier, the second is the path on the guest to mount the
@@ -75,7 +76,7 @@ Vagrant::Config.run do |web_config|
     # set current project folder for work with passenger
     #web_config.vm.share_folder("server_config", File.expand_path(File.join('.'), __FILE__))
 
-  #end
+  end
 end
 
   # Enable provisioning with Puppet stand alone.  Puppet manifests
