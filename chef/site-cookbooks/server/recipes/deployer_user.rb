@@ -8,9 +8,10 @@ execute "reload bash" do
   command "exec $SHELL"
 end
 
-template "/etc/sudoers" do
-  source "sudoers.erb"
-end
+#template "/etc/sudoers" do
+#  mode 0440
+#  source "sudoers.erb"
+#end
 
 # Creates user account for deployment
 user node[:deployer_user][:username] do
@@ -27,7 +28,7 @@ end
 
 # Create home directory for the account
 directory "/home/#{node[:deployer_user][:username]}" do
-  mode 0770
+  mode 0700
   owner node[:deployer_user][:username]
   group node[:deployer_user][:username]
   action :create

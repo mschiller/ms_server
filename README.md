@@ -17,6 +17,9 @@ change gems/veewee-0.2.0/lib/veewee/session.rb:263 "localhost" => "127.0.0.1" an
 
 - https://github.com/abtris/vagrant-hudson
 
+- http://nepalonrails.tumblr.com/post//setup-gitlab-github-clone-using-vagrant-and-chef
+- http://www.pro-linux.de/news/1/17718/erste-version-des-administrationswerkzeugs-yaffas-freigegeben.html
+
 # Links
 
 - http://wiki.opscode.com/display/chef/Resources
