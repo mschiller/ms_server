@@ -11,7 +11,7 @@
   },
   "mysql": {
     "server_root_password": "",
-    "server_old_root_password": "set before changing root password",
+    "server_old_root_password": "set false or set before changing root password",
     "bind_address": "",
     "allow_remote_root": false,
     "tunable": {
