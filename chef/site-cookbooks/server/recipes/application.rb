@@ -5,8 +5,3 @@ directory "/var/projects/" do
   mode "0755"
   action :create
 end
-
-## fixme install as user with rbenv version
-#install_gems :gems => node['rbenv']['gems'],
-#             :user => username,
-#             :group => username

@@ -3,12 +3,12 @@ gem_package "ruby-shadow" do
   action :install
 end
 
-# fixme reload after ruby-shadow install
+# reload after ruby-shadow install
 execute "reload bash" do
   command "exec $SHELL"
 end
 
-#template "/etc/sudoers" do
+# fixme template "/etc/sudoers" do
 #  mode 0440
 #  source "sudoers.erb"
 #end
@@ -24,6 +24,11 @@ user node[:deployer_user][:username] do
   end
   
   action :create
+end
+
+# add deploy user to sudoers
+group "sudo" do
+  members ['deploy']
 end
 
 # Create home directory for the account

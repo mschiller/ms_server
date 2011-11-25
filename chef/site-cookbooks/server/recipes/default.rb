@@ -1,11 +1,5 @@
 # Required for Chef to manage Ubuntu systems
 require_recipe 'ubuntu' if platform?('ubuntu')
-
-execute "upgrade system" do
-  command "apt-get update"
-  command "apt-get upgrade -y"
-end
-
 require_recipe "build-essential"
 require_recipe "git"
 require_recipe "java"
@@ -21,23 +15,31 @@ gem_package "chef" do
   action :install
 end
 
-node['mysql'] = {
-        "server_root_password" => "",
-        "tunable" => {"table_cache" => "10",
-                      "max_heap_table_size" => "32M",
-                      "back_log" => "5",
-                      "wait_timeout" => "180",
-                      "key_buffer" => "10M",
-                      "max_connections" => "20",
-                      "net_write_timeout" => "30"}
-}
-
 require_recipe "mysql"
 include_recipe "mysql::server"
+
+require_recipe "iptables"
+
+iptables_rule "default_rules" do
+  source 'iptables/default_rules.erb'
+end
+
+# for development, given by mysql recipe
+iptables_rule "port_mysql" do
+  source 'iptables/port_mysql.erb'
+end
+
+iptables_rule "drop_and_logging" do
+  source 'iptables/drop_and_logging.erb'
+end
 
 # fixme service status
 #require_recipe "postgresql"
 #include_recipe "postgresql::server"
+
+package "apache2" do
+  action :remove
+end
 
 require_recipe "nginx"
 require_recipe "unicorn"
@@ -46,12 +48,12 @@ require_recipe "solr"
 
 require_recipe "redis"
 
-# fixme only ubuntu 11.x
+# only ubuntu 11.x
 #execute "special configurations redis" do
 #  command "echo \"# special configuration for redis\" >> /etc/sysctl.conf && echo \"sysctl vm.overcommit_memory=1\" >> /etc/sysctl.conf && sysctl vm.overcommit_memory=1"
 #end
 
-include_recipe "server::system"
+include_recipe "server::ssh"
 include_recipe "server::rbenv"
 include_recipe "server::application"
 include_recipe 'server::bash_support'

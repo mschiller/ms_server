@@ -2,3 +2,4 @@
 .idea
 *.log
 *.iso
+config/config.server.json

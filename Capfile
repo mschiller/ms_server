@@ -2,8 +2,13 @@
 # Chef-Solo Capistrano Bootstrap
 #
 # usage:
+#   dna_path = dna_path
+#   <deploy_user>@<remote_host> = deploy@83.169.36.139
+#
 #   cap chef:init root@<remote_host>
-#   cap chef:bootstrap <dna> <deploy_user>@<remote_host>
+#   cap chef:bootstrap <dna_path> <deploy_user>@<remote_host>
+#   cap chef:install_dna <dna_path> <deploy_user>@<remote_host> => after change of config file
+#   cap chef:resolo <deploy_user>@<remote_host>
 
 # configuration
 default_run_options[:pty] = true # fix to display interactive password prompts
@@ -26,6 +31,7 @@ extend Automation::VagrantHelper
 namespace :chef do
   desc "Bootstrap an Ubuntu 10.04 server and kick-start Chef-Solo"
   task :bootstrap, roles: :target do
+    update_system
     install_ruby
     install_chef
     install_cookbook_repo
@@ -52,22 +58,26 @@ Defaults  env_reset
 # Cmnd alias specification
 
 # User privilege specification
-#root  ALL=(ALL) ALL
-#{settings['deploy_user']['username']} ALL=(ALL) ALL
+root  ALL=(ALL) ALL
+
 # Uncomment to allow members of group sudo to not need a password
 # (Note that later entries override this, so you might need to move
 # it further down)
 %sudo ALL=NOPASSWD: ALL
 
 # Members of the admin group may gain root privileges
-#%admin ALL=(ALL) ALL' > /etc/sudoers"
-    create_user settings['deploy_user']['username'], settings['deploy_user']['password_hash'], settings['deploy_user']['username'], 'sudo', settings['public_ssh_key']
+%admin ALL=(ALL) ALL
+
+# no password request for following groups or users
+%admin ALL = NOPASSWD: ALL
+
+#includedir /etc/sudoers.d
+' > /etc/sudoers"
+    create_user settings['deploy_user']['username'], settings['deploy_user']['password_hash'], settings['deploy_user']['username'], settings['public_ssh_key']
   end
 
   desc "install Ruby"
-  # see also: http://rohitarondekar.com/articles/installing-rails3-beta3-on-ubuntu-using-rvm
   task :install_ruby, roles: :target do
-     sudo 'apt-get update'
      sudo 'aptitude install -y ruby1.8-dev ruby1.8 rubygems libopenssl-ruby'
   end
 
@@ -99,6 +109,9 @@ Defaults  env_reset
     put %Q(file_cache_path "#{cookbook_dir}"
 cookbook_path ["#{cookbook_dir}/cookbooks", "#{cookbook_dir}/site-cookbooks"]
 role_path "#{cookbook_dir}/roles"), "#{dna_dir}/solo.rb", via: :scp, mode: "0644"
+
+    # fixme: add dynamic config file and create json live
+
     reinstall_dna
   end
 
@@ -138,15 +151,13 @@ role_path "#{cookbook_dir}/roles"), "#{dna_dir}/solo.rb", via: :scp, mode: "0644
 end
 
 # helpers
-def create_user(user, pass, group, groups, pubkey)
+def create_user(user, pass, group, pubkey)
   run "groupadd #{user}; exit 0"
-  run "useradd -s /bin/bash -m -g #{group} -G #{groups},#{user} -p #{pass} #{user}; exit 0"
+  run "useradd -s /bin/bash -m -g #{group} -p #{pass} #{user}; exit 0"
+  run "usermod -s /bin/bash -a -G sudo #{user}; exit 0"
+  run "usermod -s /bin/bash -a -G admin #{user}; exit 0"
   ssh_dir = "/home/#{user}/.ssh"
   run "mkdir -pm700 #{ssh_dir} && touch #{ssh_dir}/authorized_keys && chmod 600 #{ssh_dir}/authorized_keys && echo '#{pubkey}' >> #{ssh_dir}/authorized_keys && chown -R #{user}.#{group} #{ssh_dir}; exit 0"
-
-  # fixme run "sed -ir 's/^\\(AllowUsers\\s\\+.\\+\\)$/\\1 #{user}/' /etc/ssh/sshd_config"
-  run "echo \"AllowUsers #{user} \"|cat - /etc/ssh/sshd_config > /tmp/out && mv /tmp/out /etc/ssh/sshd_config"
-  run 'service ssh restart'
 end
 
 def sudo_env(cmd)

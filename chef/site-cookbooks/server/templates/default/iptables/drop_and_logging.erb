@@ -1,0 +1,8 @@
+
+# log all the rest before dropping
+-A INPUT   -j LOG --log-prefix "IN "
+-A INPUT   -j REJECT --reject-with icmp-port-unreachable
+-A OUTPUT  -j LOG --log-prefix "OU "
+-A OUTPUT  -j REJECT --reject-with icmp-port-unreachable
+-A FORWARD -j LOG --log-prefix "FW "
+-A FORWARD -j REJECT --reject-with icmp-port-unreachable

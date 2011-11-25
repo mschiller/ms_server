@@ -8,17 +8,25 @@ vagrant basebox build 'ms_server'
 
 change gems/veewee-0.2.0/lib/veewee/session.rb:263 "localhost" => "127.0.0.1" and it works great.
 
+# Mysql
+
+ssh -L 3307:xxx:3306 deploy@xxx
+mysql -u root -p -h 127.0.0.1 -P 3307
+
 # TODO
 
-- bundler
+- no apt-get upgrade by default
+- set mysql root pw
+- iptables
+
 - https://github.com/jamis/rbenv-gemset
 - http://vagrantup.com/docs/commands.html => ssh_config
-- multi server
 
 - https://github.com/abtris/vagrant-hudson
 
 - http://nepalonrails.tumblr.com/post//setup-gitlab-github-clone-using-vagrant-and-chef
 - http://www.pro-linux.de/news/1/17718/erste-version-des-administrationswerkzeugs-yaffas-freigegeben.html
+- http://www.pro-linux.de/news/1/17722/log-analysierer-octopussy-in-version-10-freigegeben.html
 
 # Links
 
