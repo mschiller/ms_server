@@ -37,19 +37,34 @@ execute "install ruby-build" do
   end
 end
 
-execute "install ruby" do
-  user username
+node['rbenv']['versions'].each do |rbenv_version|
+  execute "install ruby" do
+    user username
+    group username
+    environment ({'HOME' => "#{user_home}", 'USER' => username, 'PATH' => "#{user_home}/.rbenv/shims:#{user_home}/.rbenv/bin:#{default_environment_path}" })
+    cwd "#{user_home}"
+    command "rbenv install #{rbenv_version}  && rbenv rehash"
+    not_if do
+      File.exists?("#{user_home}/.rbenv/versions/#{rbenv_version}")
+    end
+  end
+end
+
+file "#{user_home}/.rbenv/default" do
+  owner username
   group username
-  environment ({'HOME' => "#{user_home}", 'USER' => username, 'PATH' => "#{user_home}/.rbenv/shims:#{user_home}/.rbenv/bin:#{default_environment_path}" })
-  cwd "#{user_home}"
-  command "rbenv install #{node['rbenv']['default_ruby']}  && rbenv rehash"
+  content node['rbenv']['default']
+  action :create
   not_if do
     File.exists?("#{user_home}/.rbenv/default")
   end
 end
-file "#{user_home}/.rbenv/default" do
-  owner username
-  group username
-  content node['rbenv']['default_ruby']
-  action :create
+
+execute "default as global" do
+  user username
+      group username
+      environment ({'HOME' => "#{user_home}", 'USER' => username, 'PATH' => "#{user_home}/.rbenv/shims:#{user_home}/.rbenv/bin:#{default_environment_path}" })
+      cwd "#{user_home}"
+      command "rbenv global #{node['rbenv']['default']}"
 end
+

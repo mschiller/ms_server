@@ -15,9 +15,7 @@ mysql -u root -p -h 127.0.0.1 -P 3307
 
 # TODO
 
-- no apt-get upgrade by default
-- set mysql root pw
-- iptables
+- resolo rsync problem
 
 - https://github.com/jamis/rbenv-gemset
 - http://vagrantup.com/docs/commands.html => ssh_config
