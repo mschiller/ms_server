@@ -29,3 +29,6 @@
 # established connections
 -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# development
+-A INPUT -p tcp --dport 8081 -j ACCEPT
