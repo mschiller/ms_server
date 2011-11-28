@@ -48,6 +48,8 @@ require_recipe "solr"
 
 require_recipe "redis"
 
+require_recipe "imagemagick::rmagick"
+
 # only ubuntu 11.x
 #execute "special configurations redis" do
 #  command "echo \"# special configuration for redis\" >> /etc/sysctl.conf && echo \"sysctl vm.overcommit_memory=1\" >> /etc/sysctl.conf && sysctl vm.overcommit_memory=1"
