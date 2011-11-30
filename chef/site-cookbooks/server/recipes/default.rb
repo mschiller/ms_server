@@ -46,9 +46,9 @@ require_recipe "unicorn"
 require_recipe "memcached"
 require_recipe "solr"
 
-require_recipe "redis"
-
 require_recipe "imagemagick::rmagick"
+
+require_recipe "redis"
 
 # only ubuntu 11.x
 #execute "special configurations redis" do
@@ -58,4 +58,4 @@ require_recipe "imagemagick::rmagick"
 include_recipe "server::ssh"
 include_recipe "server::rbenv"
 include_recipe "server::application"
-include_recipe 'server::bash_support'
+include_recipe "server::bash_support"
