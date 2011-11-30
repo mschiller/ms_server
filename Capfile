@@ -8,7 +8,7 @@
 #   cap chef:init root@<remote_host>
 #   cap chef:bootstrap <dna_path> <deploy_user>@<remote_host>
 #   cap chef:install_dna <dna_path> <deploy_user>@<remote_host> => after change of config file
-#   cap chef:resolo <deploy_user>@<remote_host>
+#   cap chef:resolo <dna_path> <deploy_user>@<remote_host>
 
 # configuration
 default_run_options[:pty] = true # fix to display interactive password prompts
