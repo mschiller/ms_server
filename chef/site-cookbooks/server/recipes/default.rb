@@ -57,3 +57,7 @@ include_recipe "server::ssh"
 include_recipe "server::rbenv"
 include_recipe "server::application"
 include_recipe "server::bash_support"
+
+node[:jenkins][:http_proxy][:host_name] = 'jenkins.*'
+node[:jenkins][:http_proxy][:variant] = 'nginx'
+require_recipe "jenkins"
