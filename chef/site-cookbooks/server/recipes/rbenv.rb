@@ -10,7 +10,7 @@ default_environment_path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/s
 
 execute "install rbenv" do
   not_if do
-    File.directory? ("#{user_home}/.rbenv")
+    File.directory?("#{user_home}/.rbenv")
   end
   user username
   group username

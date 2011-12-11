@@ -2,12 +2,12 @@
 require_recipe 'ubuntu' if platform?('ubuntu')
 require_recipe "build-essential"
 require_recipe "git"
-require_recipe "java"
 require_recipe "screen"
+include_recipe "java::sun"
 
 #todo require_recipe "god"
 
-%w(libxml++2.6-dev libxslt1-dev zip libssl-dev libxml2-dev  libreadline6-dev libghc6-curl-dev curl libqt4-dev).each do |pkg|
+%w(libxml++2.6-dev libxslt1-dev zip libssl-dev libxml2-dev  libreadline6-dev libghc6-curl-dev curl libqt4-dev nmap).each do |pkg|
   package pkg
 end
 

@@ -18,7 +18,7 @@ user node[:deployer_user][:username] do
   comment "Deployment account"
   home "/home/#{node[:deployer_user][:username]}"
   shell "/bin/bash"
-  
+  gid node[:deployer_user][:username]
   if node[:deployer_user][:password_hash]
     password node[:deployer_user][:password_hash]
   end

@@ -2,12 +2,8 @@
 # Chef-Solo Capistrano Bootstrap
 #
 # usage:
-#   dna_path = dna_path
-#   <deploy_user>@<remote_host> = deploy@83.169.36.139
-#
 #   cap chef:init root@<remote_host>
 #   cap chef:bootstrap <dna_path> <deploy_user>@<remote_host>
-#   cap chef:install_dna <dna_path> <deploy_user>@<remote_host> => after change of config file
 #   cap chef:resolo <dna_path> <deploy_user>@<remote_host>
 
 # configuration
