@@ -44,10 +44,8 @@ end
 require_recipe "nginx"
 require_recipe "unicorn"
 require_recipe "memcached"
-require_recipe "solr"
-
+#require_recipe "solr"
 require_recipe "imagemagick::rmagick"
-
 require_recipe "redis"
 
 # only ubuntu 11.x
