@@ -7,14 +7,41 @@ server {
 
   fastcgi_index   index.php;
 
-  location ~ \.php {
+  # Try all locations and relay to index.php as a fallback.
+  location / {
+      try_files $uri /index.php;
+  }
+
+  location ~* ^/(?:index|piwik)\.php$ {
     include /etc/nginx/fastcgi_params;
     keepalive_timeout 0;
-    fastcgi_param   SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-    fastcgi_pass    <%= @php_fcgi_pass %>;
-  <% if node.htpasswd.login_info -%>
-    auth_basic            "<%= node.htpasswd.login_info %>";
-    auth_basic_user_file  <%= "#{node.nginx.dir}/passwd" %>;
-  <% end -%>
+    fastcgi_param         SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    fastcgi_pass          <%= @php_fcgi_pass %>;
+  }
+
+  # Any other attempt to access PHP files returns a 404.
+  location ~* ^.+\.php$ {
+    return 404;
+  }
+
+  # Return a 404 for all text files.
+  location ~* ^/(?:README|LICENSE[^.]*|LEGALNOTICE)(?:\.txt)*$ {
+    return 404;
+  }
+
+  # Die Datei piwik.js, egal wo sie liegt bekommt eine Cachezeit von 90 Tagen.
+  location ~ piwik.js$ {
+    expires 90d;
+  }
+
+  # Das favicon interessiert uns nicht. Log aus.
+  location = /favicon.ico {
+    access_log off;
+    try_files /favicon.ico =204;
+  }
+
+  # Adressen die mit wp-content, js oder css anfangen
+  location ~ ^/(wp-content|js|css)/  {
+    expires 30d; # Cachzeit 30 Tage
   }
 }
