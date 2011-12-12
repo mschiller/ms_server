@@ -2,5 +2,5 @@
 .idea
 *.log
 *.iso
-config/config.server.json
+/config/config.*.json
 .bundle
