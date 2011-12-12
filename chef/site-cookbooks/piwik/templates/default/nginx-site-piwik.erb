@@ -1,0 +1,20 @@
+server {
+  listen 80;
+  server_name <%= node.piwik.subdomain %>.<%= node.application.domain %>;
+  server_tokens off;
+
+  root <%= @piwik_install_path %>/piwik;
+
+  fastcgi_index   index.php;
+
+  location ~ \.php {
+    include /etc/nginx/fastcgi_params;
+    keepalive_timeout 0;
+    fastcgi_param   SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    fastcgi_pass    <%= @php_fcgi_pass %>;
+  <% if node.htpasswd.login_info -%>
+    auth_basic            "<%= node.htpasswd.login_info %>";
+    auth_basic_user_file  <%= "#{node.nginx.dir}/passwd" %>;
+  <% end -%>
+  }
+}

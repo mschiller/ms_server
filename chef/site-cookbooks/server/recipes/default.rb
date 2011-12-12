@@ -70,3 +70,14 @@ end
 node[:jenkins][:http_proxy][:host_name] = "jenkins.#{node.application.domain}"
 node[:jenkins][:http_proxy][:variant] = 'nginx'
 require_recipe "jenkins"
+
+require_recipe "piwik"
+
+include_recipe "logrotate"
+
+logrotate_app 'nginx' do
+  path      File.join(node[:nginx][:log_dir], "*.log")
+  rotate     35
+  period     "daily"
+  postrotate "test ! -f /var/run/nginx.pid || kill -USR1 `cat /var/run/nginx.pid`"
+end
