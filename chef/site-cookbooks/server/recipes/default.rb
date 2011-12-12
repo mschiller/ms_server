@@ -58,6 +58,15 @@ include_recipe "server::rbenv"
 include_recipe "server::application"
 include_recipe "server::bash_support"
 
+package "apache2-utils" do # install htpasswd2
+  action :install
+end
+
+execute "create passwd file" do
+  command "htpasswd -c -b #{node.nginx.dir}/passwd #{node.htpasswd.username} #{node.htpasswd.password}"
+  notifies :restart, resources(:service => "nginx")
+end
+
 node[:jenkins][:http_proxy][:host_name] = "jenkins.#{node.application.domain}"
 node[:jenkins][:http_proxy][:variant] = 'nginx'
 require_recipe "jenkins"
