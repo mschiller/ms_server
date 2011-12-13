@@ -1,0 +1,4 @@
+#!/bin/sh
+<% @backuped_projects.each do |project| -%>
+backup perform --trigger <%= "#{project[:name].to_s}_backup" %> --config_file <%= @config_file %>
+<% end -%>

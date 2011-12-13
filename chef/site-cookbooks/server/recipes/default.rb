@@ -61,6 +61,7 @@ include_recipe "server::ssh"
 include_recipe "server::rbenv"
 include_recipe "server::application"
 include_recipe "server::bash_support"
+include_recipe "server::backup"
 
 package "apache2-utils" do # install htpasswd2
   action :install

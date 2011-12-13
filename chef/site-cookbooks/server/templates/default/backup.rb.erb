@@ -1,0 +1,98 @@
+##
+# Backup
+# Generated Template
+#
+# For more information:
+#
+# View the Git repository at https://github.com/meskyanichi/backup
+# View the Wiki/Documentation at https://github.com/meskyanichi/backup/wiki
+# View the issue log at https://github.com/meskyanichi/backup/issues
+#
+# When you're finished configuring this configuration file,
+# you can run it from the command line by issuing the following command:
+#
+# $ backup perform -t my_backup [-c <path_to_configuration_file>]
+
+#Backup::Configuration::Notifier::Mail.defaults do |mail|
+#  mail.from                 = 'sender@email.com'
+#  mail.to                   = 'receiver@email.com'
+#  mail.address              = 'smtp.gmail.com'
+#  mail.port                 = 587
+#  mail.domain               = 'your.host.name'
+#  mail.user_name            = 'sender@email.com'
+#  mail.password             = 'my_password'
+#  mail.authentication       = 'plain'
+#  mail.enable_starttls_auto = true
+#end
+
+Backup::Configuration::Database::MySQL.defaults do |db|
+  db.username           = '<%= @database_username %>'
+  db.password           = '<%= @database_password %>'
+  db.additional_options = ['--quick', '--single-transaction']
+  db.skip_tables        = ['logs']
+end
+
+Backup::Configuration::Database::MySQL.defaults do |db|
+  db.utility_path = '/usr/bin/mysqldump'
+end
+
+<% @backuped_projects.each do |project| -%>
+
+  Backup::Model.new(<%= ":#{project[:name].to_s}_backup" %>, '<%= project[:backup_desc] %>') do
+
+    compress_with Bzip2 do |compression|
+      compression.best = true
+      compression.fast = false
+    end
+
+    ##
+    # MySQL [Database]
+    #
+    database MySQL do |db|
+      db.name               = '<%= project[:database_name] %>'
+
+      db.host               = '<%= @database_host %>'
+      db.port               = '<%= @database_port %>'
+      db.socket             = '/var/run/mysqld/mysqld.sock'
+      db.skip_tables        = [<%= project[:skip_database_tables].collect {|x| "\"#{x}\"" }.join(',') %>]
+    end
+
+    archive :assets do |archive|
+      <% project[:shared_assets].each do |shared_asset_folder| -%>
+      archive.add "/var/projects/<%= project[:name] %>/production/shared/<%= shared_asset_folder %>"
+      <% end -%>
+    end
+
+    archive :logs do |archive|
+      archive.add     "/var/projects/<%= project[:name] %>/production/shared/log/production.log"
+      archive.add     "/var/projects/<%= project[:name] %>/production/shared/log/unicorn.<%= project[:name] %>.stderr.log"
+      archive.add     "/var/projects/<%= project[:name] %>/production/shared/log/unicorn.<%= project[:name] %>.stdout.log"
+      #archive.exclude 'exclude-this.log'
+    end
+
+    store_with Dropbox do |db|
+      db.api_key    = '<%= @drop_box_api_key %>'
+      db.api_secret = '<%= @drop_box_api_secret %>'
+      db.path       = '<%= @drop_box_path %>'
+      db.keep       = 25
+      db.timeout    = 300
+    end
+
+    #notify_by Mail do |mail|
+    #  mail.on_success = false
+    #  mail.on_warning = true
+    #  mail.on_failure = true
+    #end
+
+    # Prowl is an iOS push notification gateway. Backup can connect to Prowl and deliver success and/or failure notifications directly to your iOS device. All you need is a Prowl account. Go to the API keys tab after registration, generate a key and copy/paste it into your notifier configuration.
+    #notify_by Prowl do |prowl|
+    #  prowl.on_success = true
+    #  prowl.on_failure = true
+    #
+    #  prowl.application = 'my_application'  # Example: Server Backup
+    #  prowl.api_key     = 'my_api_key'
+  #end
+end
+
+<% end -%>
+

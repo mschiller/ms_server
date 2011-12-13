@@ -30,6 +30,25 @@
        "net_write_timeout": "30"
     }
   },
+  "backup": {
+    "database_username": "",
+    "database_password": "",
+    "database_host": "",
+    "database_port": "",
+    "from_host": "",
+    "drop_box_api_key": "",
+    "drop_box_api_secret": "",
+    "drop_box_path": "/SERVER_BACKUP",
+    "backuped_projects": [
+      {
+        "name": "name of backup project",
+        "backup_desc": "short backup project description",
+        "database_name": "",
+        "skip_database_tables": [""],
+        "shared_assets": ["assets"]
+      }
+    ]
+  },
   "rbenv": {
     "default": "1.9.3-rc1",
     "versions": [
