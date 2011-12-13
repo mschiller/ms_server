@@ -13,17 +13,17 @@
 #
 # $ backup perform -t my_backup [-c <path_to_configuration_file>]
 
-#Backup::Configuration::Notifier::Mail.defaults do |mail|
-#  mail.from                 = 'sender@email.com'
-#  mail.to                   = 'receiver@email.com'
-#  mail.address              = 'smtp.gmail.com'
-#  mail.port                 = 587
-#  mail.domain               = 'your.host.name'
-#  mail.user_name            = 'sender@email.com'
-#  mail.password             = 'my_password'
-#  mail.authentication       = 'plain'
-#  mail.enable_starttls_auto = true
-#end
+Backup::Configuration::Notifier::Mail.defaults do |mail|
+  mail.from                 = '<%= @mail[:from] %>'
+  mail.to                   = '<%= @mail[:to] %>'
+  mail.address              = '<%= @mail[:address] %>'
+  mail.port                 =  <%= @mail[:port] %>
+  mail.domain               = '<%= @mail[:domain] %>'
+  mail.user_name            = '<%= @mail[:user_name] %>'
+  mail.password             = '<%= @mail[:password] %>'
+  mail.authentication       = '<%= @mail[:authentication] %>'
+  mail.enable_starttls_auto =  <%= @mail[:enable_starttls_auto] %>
+end
 
 Backup::Configuration::Database::MySQL.defaults do |db|
   db.username           = '<%= @database_username %>'
@@ -70,19 +70,24 @@ end
       #archive.exclude 'exclude-this.log'
     end
 
-    store_with Dropbox do |db|
-      db.api_key    = '<%= @drop_box_api_key %>'
-      db.api_secret = '<%= @drop_box_api_secret %>'
-      db.path       = '<%= @drop_box_path %>'
-      db.keep       = 25
-      db.timeout    = 300
+    #store_with Dropbox do |db|
+    #  db.api_key    = '<%= @drop_box_api_key %>'
+    #  db.api_secret = '<%= @drop_box_api_secret %>'
+    #  db.path       = '<%= @drop_box_path %>'
+    #  db.keep       = 25
+    #  db.timeout    = 300
+    #end
+    # workaround because of auth problems with dropbox
+    # see https://github.com/meskyanichi/backup/wiki/Storages
+    store_with Local do |local|
+      local.path = '~/backups/'
+      local.keep = 10
     end
 
-    #notify_by Mail do |mail|
-    #  mail.on_success = false
-    #  mail.on_warning = true
-    #  mail.on_failure = true
-    #end
+    notify_by Mail do |mail|
+      mail.on_success = true
+      mail.on_failure = true
+    end
 
     # Prowl is an iOS push notification gateway. Backup can connect to Prowl and deliver success and/or failure notifications directly to your iOS device. All you need is a Prowl account. Go to the API keys tab after registration, generate a key and copy/paste it into your notifier configuration.
     #notify_by Prowl do |prowl|

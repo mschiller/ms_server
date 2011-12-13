@@ -47,7 +47,18 @@
         "skip_database_tables": [""],
         "shared_assets": ["assets"]
       }
-    ]
+    ],
+    "mail": {
+      "from": "",
+      "to": "",
+      "address": "",
+      "port": "587",
+      "domain": "",
+      "user_name": "",
+      "password": "",
+      "authentication": "plain",
+      "enable_starttls_auto": "false"
+    }
   },
   "rbenv": {
     "default": "1.9.3-rc1",
