@@ -10,7 +10,7 @@ Vagrant::Config.run do |config|
 
   config.vm.define :application_server do |web_config|
 
-    node = node_settings('config.vagrant')
+    node = node_settings('config.server')
     node[:public_ssh_key] = `cat ~/.ssh/id_rsa.pub`
 
     # Every Vagrant virtual environment requires a box to build off of.
@@ -38,7 +38,7 @@ Vagrant::Config.run do |config|
     web_config.vm.provision :chef_solo do |chef|
       chef.cookbooks_path = [ File.join(File.expand_path('..', __FILE__), 'chef', 'site-cookbooks') ]
       chef.add_recipe 'server::deployer_user'
-      chef.add_recipe "server"
+      #chef.add_recipe "server"
 
       # Additional Chef settings
       # merge is used to preserve the default JSON configuration,
@@ -66,7 +66,7 @@ Vagrant::Config.run do |config|
     web_config.vm.forward_port("web", 80, 8880)
     web_config.vm.forward_port("ssl", 443, 8443)
     web_config.vm.forward_port("ftp", 21, 8821)
-    web_config.vm.forward_port("ssh", 22, node['ssh']['port'].to_i, :auto => true)
+    web_config.vm.forward_port("ssh", 22, 2222, :auto => true)
     #web_config.vm.forward_port("mysql", 3306, 3333)
     #web_config.vm.forward_port("solr", 8981, 9984)
 
