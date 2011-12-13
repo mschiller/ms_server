@@ -15,6 +15,10 @@ gem_package "chef" do
   action :install
 end
 
+execute "remove gem source entry for opscode" do
+  command "gem sources -r http://gems.opscode.com/"
+end
+
 require_recipe "mysql"
 include_recipe "mysql::server"
 
