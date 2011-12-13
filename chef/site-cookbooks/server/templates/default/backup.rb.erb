@@ -89,15 +89,14 @@ end
       mail.on_failure = true
     end
 
-    # Prowl is an iOS push notification gateway. Backup can connect to Prowl and deliver success and/or failure notifications directly to your iOS device. All you need is a Prowl account. Go to the API keys tab after registration, generate a key and copy/paste it into your notifier configuration.
     #notify_by Prowl do |prowl|
     #  prowl.on_success = true
     #  prowl.on_failure = true
     #
-    #  prowl.application = 'my_application'  # Example: Server Backup
-    #  prowl.api_key     = 'my_api_key'
-  #end
-end
+    #  prowl.application = 'Server Backup'
+    #  prowl.api_key     = '<%= @prowl_api_key %>'
+    #end
+  end
 
 <% end -%>
 
