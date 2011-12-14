@@ -55,10 +55,9 @@ end
 
 cron "cron task for backup" do
   user node.deployer_user.username
-  #hour "5"
-  minute "*/5"
+  hour "5"
+  minute "0"
   command "/home/#{node[:deployer_user][:username]}/bin/backup.sh"
   mailto node.backup.mail.to
   only_if do File.exist?("/home/#{node[:deployer_user][:username]}/bin/backup.sh") end
-  #action :delete
 end
