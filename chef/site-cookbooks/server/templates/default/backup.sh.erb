@@ -1,4 +1,9 @@
 #!/bin/sh
+
+export USER=<%= @user %>
+export HOME='/home/<%= @user %>'
+export PATH=$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH
+
 <% @backuped_projects.each do |project| -%>
 backup perform --trigger <%= "#{project[:name].to_s}_backup" %> --config_file <%= @config_file %>
 <% end -%>

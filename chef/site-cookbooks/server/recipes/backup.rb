@@ -38,7 +38,8 @@ template "/home/#{node[:deployer_user][:username]}/bin/backup.sh" do
     {
       :backuped_projects => node.backup.backuped_projects
     }.merge!(
-      :config_file => "/home/#{node[:deployer_user][:username]}/scripts/backup.rb"
+      :config_file => "/home/#{node[:deployer_user][:username]}/scripts/backup.rb",
+      :user => node.deployer_user.username
     )
   )
 end
@@ -48,15 +49,16 @@ template "/home/#{node.deployer_user.username}/scripts/backup.rb" do
   group node.deployer_user.username
   source "backup.rb.erb"
   variables(
-      node.backup.to_hash
+    node.backup.to_hash
   )
 end
 
 cron "cron task for backup" do
   user node.deployer_user.username
-  hour "5"
-  minute "0"
+  #hour "5"
+  minute "*/5"
   command "/home/#{node[:deployer_user][:username]}/bin/backup.sh"
   mailto node.backup.mail.to
   only_if do File.exist?("/home/#{node[:deployer_user][:username]}/bin/backup.sh") end
+  #action :delete
 end

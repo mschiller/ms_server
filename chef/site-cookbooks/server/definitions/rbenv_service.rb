@@ -1,7 +1,7 @@
 #
 # install gem into default ruby of rbenv
 #
-define :rbenv_install_gem, :name => nil, :version => nil, :for_user => 'deploy', :default_environment_path => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/lib/gems/1.8/bin" do
+define :rbenv_install_gem, :name => nil, :version => nil, :for_user => 'deploy', :default_environment_path => "$PATH" do #"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/lib/gems/1.8/bin" do
 
   user_home = "/home/#{params[:for_user]}"
 
