@@ -9,6 +9,14 @@
 LIGHTGREEN='\e[1;32m'
 LIGHTBLUE='\e[36m'
 NC='\e[0m'              # No Color
+GRAY="\[\033[1;30m\]"
+LIGHT_GRAY="\[\033[0;37m\]"
+CYAN="\[\033[0;36m\]"
+LIGHT_CYAN="\[\033[1;36m\]"
+
+#https://github.com/mpapis/rubygems-bundler
+export USE_BUNDLER=try
+export BUNDLER_BLACKLIST=""
 
 # WELCOME SCREEN
 #######################################################
@@ -71,38 +79,6 @@ case "$TERM" in
     xterm-color) color_prompt=yes;;
 esac
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
-
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -130,8 +106,6 @@ fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
-
-source ~/.lightning/functions.sh
 
 # In dieser Funktion ermitteln wir den aktuellen Git-Branch in dem wir uns befinden
 function find_git_branch {
@@ -162,10 +136,8 @@ function _git_prompt() {
 
 # Diese Funktion erweitert den Prompt mit den Daten aus den vorherigen Funktionen
 function prompt_func(){
-  export PS1="\[\033[0;34m\]$(find_git_branch) \[\e[33m\]\w\[    \e[0m\]\n$ "
-  #export PS1="`_git_prompt`$(get_rvm_ruby_version) \[\033[0;34m\]$(find_git_branch) \[\e[33m\]\w\[    \e[0m\]\n$ "
-  #export PS1="`_git_prompt`\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\033[1;36m\]$(get_rvm_ruby_version) \[\033[0;34m\]$(find_git_branch) \[\e[33m\]\w\[    \e[0m\]\n$ "
-
+  export PROMPT_COMMAND='history -a;echo -en "\033[m\033[38;5;2m"$(( `sed -nu "s/MemFree:[\t ]\+\([0-9]\+\) kB/\1/p" /proc/meminfo`/1024))"\033[38;5;22m/"$((`sed -nu "s/MemTotal:[\t ]\+\([0-9]\+\) kB/\1/Ip" /proc/meminfo`/1024 ))MB"\t\033[m\033[38;5;55m$(< /proc/loadavg)\033[m"'
+  export PS1='\[\033[0;34m\]$(find_git_branch)  \[\e[33m\]\w\[ \[\e[m\n\e[1;30m\][$$:$PPID \j:\!\[\e[1;30m\]]\[\e[0;36m\] \T \d \[\e[1;30m\][\[\e[1;34m\]\u@\H\[\e[1;30m\]:\[\e[0;37m\]${SSH_TTY} \[\e[0;32m\]+${SHLVL}\[\e[1;30m\]] \n($SHLVL:\!)\$ '
 }
 
 PROMPT_COMMAND=prompt_func

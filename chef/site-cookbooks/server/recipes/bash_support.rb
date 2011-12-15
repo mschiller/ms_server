@@ -20,24 +20,3 @@ template "#{home}/.git-completion.bash" do
   source "bash/git-completion.bash.erb"
   mode 0640
 end
-
-directory "#{home}/.lightning" do
-  owner node[:deployer_user][:username]
-  group node[:deployer_user][:username]
-  mode "0755"
-  action :create
-end
-
-template "#{home}/.lightning/functions.sh" do
-  owner node[:deployer_user][:username]
-  group node[:deployer_user][:username]
-  source "bash/functions.sh.erb"
-  mode 0640
-end
-
-template "#{home}/.lightningrc" do
-  owner node[:deployer_user][:username]
-  group node[:deployer_user][:username]
-  source "bash/lightningrc.erb"
-  mode 0640
-end
