@@ -48,9 +48,10 @@ end
 require_recipe "nginx"
 require_recipe "unicorn"
 require_recipe "memcached"
-#require_recipe "solr"
 require_recipe "imagemagick::rmagick"
 require_recipe "redis"
+#require_recipe "nagios::server"
+#require_recipe "solr"
 
 # only ubuntu 11.x
 #execute "special configurations redis" do
@@ -62,6 +63,7 @@ include_recipe "server::rbenv"
 include_recipe "server::application"
 include_recipe "server::bash_support"
 include_recipe "server::backup"
+include_recipe "server::newrelic"
 
 package "apache2-utils" do # install htpasswd2
   action :install
