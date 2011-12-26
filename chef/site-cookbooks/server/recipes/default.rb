@@ -50,7 +50,7 @@ require_recipe "unicorn"
 require_recipe "memcached"
 require_recipe "imagemagick::rmagick"
 require_recipe "redis"
-#require_recipe "nagios::server"
+
 #require_recipe "solr"
 
 # only ubuntu 11.x

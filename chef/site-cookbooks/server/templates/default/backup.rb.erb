@@ -84,6 +84,25 @@ end
       local.keep = 10
     end
 
+    #sync_with RSync do |rsync|
+    #  rsync.ip                 = "127.0.0.1"
+    #  rsync.path               = "~/backups/"
+    #  rsync.compress           = true
+    #  rsync.mirror             = true
+    #  rsync.port               = 22
+    #  rsync.username           = "deploy"
+    #  #rsync.local              = true
+    #  #rsync.password           = "my_password"
+    #  #rsync.additional_options = ['--some-option']
+    #
+    #  rsync.directories do |directory|
+        <!--<% project[:shared_assets].each do |shared_asset_folder| -%>-->
+    #      directory.add "/var/projects/<%= project[:name] %>/production/shared/<%= shared_asset_folder %>"
+        <!--<% end -%>-->
+    #    directory.add "/var/projects/<%= project[:name] %>/production/shared/log"
+    #  end
+    #end
+
     notify_by Mail do |mail|
       mail.on_success = true
       mail.on_failure = true

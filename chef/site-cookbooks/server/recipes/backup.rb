@@ -11,6 +11,10 @@ rbenv_install_gem 'dropbox' do
   for_user 'deploy'
 end
 
+package 'bzip2' do
+  action :install
+end
+
 directory "/home/#{node[:deployer_user][:username]}/bin/" do
   owner node[:deployer_user][:username]
   group node[:deployer_user][:username]
