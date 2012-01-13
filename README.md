@@ -8,11 +8,6 @@ vagrant basebox build 'ms_server'
 
 change gems/veewee-0.2.0/lib/veewee/session.rb:263 "localhost" => "127.0.0.1" and it works great.
 
-# Mysql
-
-ssh -L 3307:xxx:3306 deploy@xxx
-mysql -u root -p -h 127.0.0.1 -P 3307
-
 # TODO
 
 - resolo rsync problem

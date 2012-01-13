@@ -3,12 +3,16 @@ require_recipe 'ubuntu' if platform?('ubuntu')
 require_recipe "build-essential"
 require_recipe "git"
 require_recipe "screen"
-include_recipe "java::sun"
-
-#todo require_recipe "god"
+include_recipe "java::openjdk"
 
 %w(libxml++2.6-dev libxslt1-dev zip libssl-dev libxml2-dev  libreadline6-dev libghc6-curl-dev curl libqt4-dev nmap).each do |pkg|
   package pkg
+end
+
+%W(sun-java6-jdk apache2).each do |pkg|
+  package pkg do
+    action :remove
+  end
 end
 
 gem_package "chef" do
@@ -32,17 +36,13 @@ end
 iptables_rule "port_mysql" do
   source 'iptables/port_mysql.erb'
 end
+# for development
+#iptables_rule "port_postgres" do
+#  source 'iptables/port_postgres.erb'
+#end
 
 iptables_rule "drop_and_logging" do
   source 'iptables/drop_and_logging.erb'
-end
-
-# fixme service status
-#require_recipe "postgresql"
-#include_recipe "postgresql::server"
-
-package "apache2" do
-  action :remove
 end
 
 require_recipe "nginx"
@@ -50,8 +50,6 @@ require_recipe "unicorn"
 require_recipe "memcached"
 require_recipe "imagemagick::rmagick"
 require_recipe "redis"
-
-#require_recipe "solr"
 
 # only ubuntu 11.x
 #execute "special configurations redis" do
@@ -88,3 +86,24 @@ logrotate_app 'nginx' do
   period     "daily"
   postrotate "test ! -f /var/run/nginx.pid || kill -USR1 `cat /var/run/nginx.pid`"
 end
+
+node[:tz] = 'Europe/Berlin'
+require_recipe "timezone"
+
+=begin
+
+#require_recipe "postgresql"
+#include_recipe "postgresql::server"
+
+todo
+1. change linux 'postgres' user password
+2. change postgres main user password
+
+Connect to PostgreSQL with psql from the postgres Unix account:
+
+      psql -d template1
+
+    Change the postgres password:
+
+      ALTER USER postgres WITH PASSWORD 'this_is_my_password';
+=end

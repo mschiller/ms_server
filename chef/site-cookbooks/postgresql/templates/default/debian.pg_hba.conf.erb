@@ -81,3 +81,13 @@ local   all         all                               ident
 host    all         all         127.0.0.1/32          md5
 # IPv6 local connections:
 host    all         all         ::1/128               md5
+
+# development mode
+# In the absence of preceding "host" lines, these two lines will
+# reject all connection from 192.168.54.1 (since that entry will be
+# matched first), but allow Kerberos 5 connections from anywhere else
+# on the Internet.  The zero mask means that no bits of the host IP
+# address are considered so it matches any host.
+#
+# TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
+host    all         all         0.0.0.0/0             md5
