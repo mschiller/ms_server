@@ -70,17 +70,30 @@ end
       #archive.exclude 'exclude-this.log'
     end
 
-    store_with Dropbox do |db|
-      db.api_key    = '<%= @drop_box_api_key %>'
-      db.api_secret = '<%= @drop_box_api_secret %>'
-      db.path       = '<%= @drop_box_path %>'
-      db.keep       = 25
+    store_with FTP do |server|
+      server.username = '<%= @ftp_username %>'
+      server.password = '<%= @ftp_password %>'
+      server.ip       = '<%= @ftp_server_ip %>'
+      server.port     = 21
+      server.path     = 'backups/'
+      server.keep     = 25
     end
 
-    store_with Local do |local|
-      local.path = '~/backups/'
-      local.keep = 10
-    end
+    #store_with Dropbox do |db|
+    #  db.api_key    = '<%= @drop_box_api_key %>'
+    #  db.api_secret = '<%= @drop_box_api_secret %>'
+    #  db.path       = '<%= @drop_box_path %>'
+    #  db.keep       = 10
+    #  # Dropbox Access Type
+    #  # The default value is :app_folder
+    #  # Change this to :dropbox if needed
+    #  # db.access_type = :dropbox
+    #end
+
+    #store_with Local do |local|
+    #  local.path = '~/backups/'
+    #  local.keep = 10
+    #end
 
     #sync_with RSync do |rsync|
     #  rsync.ip                 = "127.0.0.1"

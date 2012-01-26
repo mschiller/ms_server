@@ -39,6 +39,9 @@
     "drop_box_api_key": "",
     "drop_box_api_secret": "",
     "drop_box_path": "/SERVER_BACKUP",
+    "ftp_username": "",
+    "ftp_password": "",
+    "ftp_server_ip": "",
     "prowl_api_key": "",
     "backuped_projects": [
       {
