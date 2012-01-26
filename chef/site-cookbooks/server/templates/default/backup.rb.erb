@@ -33,7 +33,7 @@ Backup::Configuration::Database::MySQL.defaults do |db|
 end
 
 Backup::Configuration::Database::MySQL.defaults do |db|
-  db.utility_path = '/usr/bin/mysqldump'
+  db.mysqldump_utility = '/usr/bin/mysqldump'
 end
 
 <% @backuped_projects.each do |project| -%>
@@ -70,15 +70,13 @@ end
       #archive.exclude 'exclude-this.log'
     end
 
-    #store_with Dropbox do |db|
-    #  db.api_key    = '<%= @drop_box_api_key %>'
-    #  db.api_secret = '<%= @drop_box_api_secret %>'
-    #  db.path       = '<%= @drop_box_path %>'
-    #  db.keep       = 25
-    #  db.timeout    = 300
-    #end
-    # workaround because of auth problems with dropbox
-    # see https://github.com/meskyanichi/backup/wiki/Storages
+    store_with Dropbox do |db|
+      db.api_key    = '<%= @drop_box_api_key %>'
+      db.api_secret = '<%= @drop_box_api_secret %>'
+      db.path       = '<%= @drop_box_path %>'
+      db.keep       = 25
+    end
+
     store_with Local do |local|
       local.path = '~/backups/'
       local.keep = 10
@@ -96,9 +94,9 @@ end
     #  #rsync.additional_options = ['--some-option']
     #
     #  rsync.directories do |directory|
-        <!--<% project[:shared_assets].each do |shared_asset_folder| -%>-->
+    #    <% project[:shared_assets].each do |shared_asset_folder| -%>
     #      directory.add "/var/projects/<%= project[:name] %>/production/shared/<%= shared_asset_folder %>"
-        <!--<% end -%>-->
+    #    <% end -%>
     #    directory.add "/var/projects/<%= project[:name] %>/production/shared/log"
     #  end
     #end
