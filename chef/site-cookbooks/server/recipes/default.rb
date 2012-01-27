@@ -50,6 +50,7 @@ require_recipe "unicorn"
 require_recipe "memcached"
 require_recipe "imagemagick::rmagick"
 require_recipe "redis"
+require_recipe "postfix"
 
 # only ubuntu 11.x
 #execute "special configurations redis" do
