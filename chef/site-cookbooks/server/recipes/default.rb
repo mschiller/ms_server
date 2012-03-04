@@ -9,7 +9,7 @@ include_recipe "java::openjdk"
   package pkg
 end
 
-%W(sun-java6-jdk apache2).each do |pkg|
+%W(apache2).each do |pkg|
   package pkg do
     action :remove
   end
