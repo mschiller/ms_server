@@ -72,9 +72,6 @@ file "#{user_home}/.rbenv/default" do
   group username
   content node['rbenv']['default']
   action :create
-  not_if do
-    File.exists?("#{user_home}/.rbenv/default")
-  end
 end
 
 execute "default as global" do
