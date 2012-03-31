@@ -5,11 +5,11 @@ require_recipe "git"
 require_recipe "screen"
 include_recipe "java::openjdk"
 
-%w(libxml++2.6-dev libxslt1-dev zip libssl-dev libxml2-dev  libreadline6-dev libghc6-curl-dev curl libqt4-dev nmap).each do |pkg|
+%w(libxml++2.6-dev libxslt1-dev zip libssl-dev libxml2-dev  libreadline6-dev libghc6-curl-dev curl libqt4-dev nmap imagemagick).each do |pkg|
   package pkg
 end
 
-%W(apache2).each do |pkg|
+%w(apache2).each do |pkg|
   package pkg do
     action :remove
   end
@@ -63,6 +63,7 @@ include_recipe "server::application"
 include_recipe "server::bash_support"
 include_recipe "server::backup"
 include_recipe "server::newrelic"
+include_recipe "server::wkhtmltopdf"
 
 package "apache2-utils" do # install htpasswd2
   action :install
