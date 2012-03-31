@@ -1,9 +1,9 @@
 source :rubygems
 
 # vagrant
-gem 'vagrant', '0.8.2'
-gem 'virtualbox', '0.9.2'
-gem 'veewee', '0.2.0'
+gem 'vagrant', '>= 1.0.0'
+gem 'virtualbox', '>= 0.9.2'
+#gem 'veewee', '0.2.0'
 
 gem 'capistrano'
 
