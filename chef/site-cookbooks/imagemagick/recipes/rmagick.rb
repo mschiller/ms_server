@@ -26,7 +26,6 @@ dev_pkg = value_for_platform(
     "8.10" => "libmagick9-dev",
     "9.04" => "libmagick9-dev",
     "9.10" => "libmagick9-dev",
-    "10.04" => "libmagick9-dev",
     "default" => "libmagickwand-dev"
   }
 )

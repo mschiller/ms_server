@@ -45,7 +45,10 @@ iptables_rule "drop_and_logging" do
   source 'iptables/drop_and_logging.erb'
 end
 
+node[:nginx][:install_method] = 'source'
+node[:nginx][:version] = "1.2.0"
 require_recipe "nginx"
+
 require_recipe "unicorn"
 require_recipe "memcached"
 require_recipe "imagemagick::rmagick"
@@ -74,9 +77,9 @@ execute "create passwd file" do
   notifies :restart, resources(:service => "nginx")
 end
 
-node[:jenkins][:http_proxy][:host_name] = "jenkins.#{node.application.domain}"
-node[:jenkins][:http_proxy][:variant] = 'nginx'
-require_recipe "jenkins"
+#node[:jenkins][:http_proxy][:host_name] = "jenkins.#{node.application.domain}"
+#node[:jenkins][:http_proxy][:variant] = 'nginx'
+#require_recipe "jenkins"
 
 require_recipe "piwik"
 

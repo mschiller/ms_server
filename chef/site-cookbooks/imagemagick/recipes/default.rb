@@ -20,7 +20,10 @@
 case node[:platform]
 when "redhat", "centos", "fedora"
   package "ImageMagick"
-when "debian", "ubuntu"
+when "debian"
   package "imagemagick"
   package "libmagick9-dev"
+when "ubuntu"
+  package "imagemagick"
+  package "libmagickwand-dev"
 end
