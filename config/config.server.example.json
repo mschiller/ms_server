@@ -1,86 +1,101 @@
 {
-  "recipes": [
+  "recipes":[
     "server::default"
   ],
-  "application": {
-    "deploy_to": "/srv/apps/",
-    "domain": ""
+  "application":{
+    "deploy_to":"/srv/apps/",
+    "domain":""
   },
-  "htpasswd": {
-    "username": "",
-    "password": "",
-    "login_info": ".. Login"
+  "htpasswd":{
+    "username":"",
+    "password":"",
+    "login_info":".. Login"
   },
-  "deploy_user": {
-      "username": "deploy",
-      "password_hash": ""
+  "deploy_user":{
+    "username":"deploy",
+    "password_hash":""
   },
-  "mysql": {
-    "server_root_password": "",
-    "server_old_root_password": "set false or set before changing root password",
-    "bind_address": "",
-    "allow_remote_root": false,
-    "tunable": {
-       "table_cache": "10",
-       "max_heap_table_size": "32M",
-       "back_log": "5",
-       "wait_timeout": "180",
-       "key_buffer": "10M",
-       "max_connections": "20",
-       "net_write_timeout": "30"
+  "mysql":{
+    "server_root_password":"",
+    "server_old_root_password":"set false or set before changing root password",
+    "bind_address":"",
+    "allow_remote_root":false,
+    "tunable":{
+      "table_cache":"10",
+      "max_heap_table_size":"32M",
+      "back_log":"5",
+      "wait_timeout":"180",
+      "key_buffer":"10M",
+      "max_connections":"20",
+      "net_write_timeout":"30"
     }
   },
-  "backup": {
-    "database_username": "",
-    "database_password": "",
-    "database_host": "",
-    "database_port": "",
-    "from_host": "",
-    "drop_box_api_key": "",
-    "drop_box_api_secret": "",
-    "drop_box_path": "/SERVER_BACKUP",
-    "ftp_username": "",
-    "ftp_password": "",
-    "ftp_server_ip": "",
-    "prowl_api_key": "",
-    "backuped_projects": [
+  "backup":{
+    "database_username":"",
+    "database_password":"",
+    "database_host":"",
+    "database_port":"",
+    "from_host":"",
+    "drop_box_api_key":"",
+    "drop_box_api_secret":"",
+    "drop_box_path":"/SERVER_BACKUP",
+    "ftp_username":"",
+    "ftp_password":"",
+    "ftp_server_ip":"",
+    "prowl_api_key":"",
+    "backuped_projects":[
       {
-        "name": "name of backup project",
-        "backup_desc": "short backup project description",
-        "database_name": "",
-        "skip_database_tables": [""],
-        "shared_assets": ["assets"]
+        "name":"name of backup project",
+        "backup_desc":"short backup project description",
+        "database_name":"",
+        "skip_database_tables":[""],
+        "shared_assets":["assets"]
       }
     ],
-    "mail": {
-      "from": "",
-      "to": "",
-      "address": "",
-      "port": "587",
-      "domain": "",
-      "user_name": "",
-      "password": "",
-      "authentication": "plain",
-      "enable_starttls_auto": "false"
+    "mail":{
+      "from":"",
+      "to":"",
+      "address":"",
+      "port":"587",
+      "domain":"",
+      "user_name":"",
+      "password":"",
+      "authentication":"plain",
+      "enable_starttls_auto":"false"
     }
   },
-  "rbenv": {
-    "default": "1.9.3-p125",
-    "version": "v0.3.0",
-    "versions": [
+  "rbenv":{
+    "default":"1.9.3-p125",
+    "version":"v0.3.0",
+    "versions":[
       "1.9.3-p125",
       "1.8.7-p352"
     ],
-    "gems" : [
-      { "name"    : "bundler",
-        "version" : "1.1.0" },
-      { "name"    : "rake",
-        "version" : "0.9.2" },
-      { "name"    : "chef",
-        "version" : "0.10.4" }
+    "gems":[
+      {
+        "name":"bundler",
+        "version":"1.1.0"
+      },
+      {
+        "name":"rake",
+        "version":"0.9.2"
+      },
+      {
+        "name":"chef",
+        "version":"0.10.4"
+      }
     ]
   },
-    "newrelic": {
-      "license": ""
+  "newrelic":{
+    "license":""
+  },
+  "certificates": [
+    {
+      "name":"",
+      "ca":".ca",
+      "crt":".crt",
+      "key":".key",
+      "pem":".pem"
     }
+  ]
 }

@@ -4,3 +4,4 @@
 *.iso
 /config/config.*.json
 .bundle
+*SSL*

@@ -74,9 +74,9 @@ execute "create passwd file" do
   notifies :restart, resources(:service => "nginx")
 end
 
-node[:jenkins][:http_proxy][:host_name] = "jenkins.#{node.application.domain}"
-node[:jenkins][:http_proxy][:variant] = 'nginx'
-require_recipe "jenkins"
+#node[:jenkins][:http_proxy][:host_name] = "jenkins.#{node.application.domain}"
+#node[:jenkins][:http_proxy][:variant] = 'nginx'
+#require_recipe "jenkins"
 
 require_recipe "piwik"
 
@@ -91,6 +91,25 @@ end
 
 node[:tz] = 'Europe/Berlin'
 require_recipe "timezone"
+
+# ssl
+directory "#{node[:nginx][:dir]}/cert" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+end
+node[:certificates].each do |cert|
+  name = cert[:name]
+
+  cert[:files].each do |key, value|
+    user "root"
+    group "root"
+    template "#{node[:nginx][:dir]}/cert/#{name}_cert.#{key}" do
+      source value
+    end
+  end
+end
 
 =begin
 
