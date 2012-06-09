@@ -68,6 +68,6 @@ cron "cron task for backup" do
   hour "5"
   minute "0"
   command "/home/#{node[:deployer_user][:username]}/bin/backup.sh"
-  mailto node.backup.mail.to
+  #mailto node.backup.mail.to
   only_if do File.exist?("/home/#{node[:deployer_user][:username]}/bin/backup.sh") end
 end
