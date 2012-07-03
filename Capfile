@@ -37,51 +37,57 @@ namespace :chef do
 
   desc "Initialize a fresh Ubuntu install; create users, groups, upload pubkey, etc."
   task :init, roles: :target do
-    run "echo '
-# /etc/sudoers
+#    run "echo '
+## /etc/sudoers
+##
+## This file MUST be edited with the 'visudo' command as root.
+##
+## See the man page for details on how to write a sudoers file.
+##
 #
-# This file MUST be edited with the 'visudo' command as root.
+#Defaults  env_reset
 #
-# See the man page for details on how to write a sudoers file.
+## Host alias specification
 #
-
-Defaults  env_reset
-
-# Host alias specification
-
-# User alias specification
-
-# Cmnd alias specification
-
-# User privilege specification
-root  ALL=(ALL) ALL
-
-# Uncomment to allow members of group sudo to not need a password
-# (Note that later entries override this, so you might need to move
-# it further down)
-%sudo ALL=NOPASSWD: ALL
-
-# Members of the admin group may gain root privileges
-%admin ALL=(ALL) ALL
-
-# no password request for following groups or users
-%admin ALL = NOPASSWD: ALL
-
-#includedir /etc/sudoers.d
-' > /etc/sudoers"
+## User alias specification
+#
+## Cmnd alias specification
+#
+## User privilege specification
+#root  ALL=(ALL) ALL
+#
+## Uncomment to allow members of group sudo to not need a password
+## (Note that later entries override this, so you might need to move
+## it further down)
+#%sudo ALL=NOPASSWD: ALL
+#
+## Members of the admin group may gain root privileges
+#%admin ALL=(ALL) ALL
+#
+## no password request for following groups or users
+#%admin ALL = NOPASSWD: ALL
+#
+##includedir /etc/sudoers.d
+#' > /etc/sudoers"
     create_user settings['deploy_user']['username'], settings['deploy_user']['password_hash'], settings['deploy_user']['username'], settings['public_ssh_key']
+  end
+
+  desc "update system"
+  task :update_system, roles: :target do
+     sudo 'apt-get update'
   end
 
   desc "install Ruby"
   task :install_ruby, roles: :target do
-     sudo 'aptitude install -y ruby1.8-dev ruby1.8 rubygems libopenssl-ruby'
+     sudo 'apt-get install -y ruby1.8-dev ruby1.8 rubygems libopenssl-ruby'
   end
 
   desc "Install Chef and Ohai gems as root"
   task :install_chef, roles: :target do
     sudo 'gem source -a http://gems.opscode.com/' # fixme test if gem is installed
     sudo 'gem install ohai chef --no-ri --no-rdoc'
-    sudo "echo 'export PATH=/var/lib/gems/1.8/bin:$PATH' > /home/#{settings['deploy_user']['username']}/.bashrc"
+    run "touch /home/#{settings['deploy_user']['username']}/.bashrc"
+    run "echo 'export PATH=/var/lib/gems/1.8/bin:$PATH' > /home/#{settings['deploy_user']['username']}/.bashrc"
   end
 
   desc "Install Cookbook Repository from cwd"
@@ -151,7 +157,6 @@ def create_user(user, pass, group, pubkey)
   run "groupadd #{user}; exit 0"
   run "useradd -s /bin/bash -m -g #{group} -p #{pass} #{user}; exit 0"
   run "usermod -s /bin/bash -a -G sudo #{user}; exit 0"
-  run "usermod -s /bin/bash -a -G admin #{user}; exit 0"
   ssh_dir = "/home/#{user}/.ssh"
   run "mkdir -pm700 #{ssh_dir} && touch #{ssh_dir}/authorized_keys && chmod 600 #{ssh_dir}/authorized_keys && echo '#{pubkey}' >> #{ssh_dir}/authorized_keys && chown -R #{user}.#{group} #{ssh_dir}; exit 0"
 end

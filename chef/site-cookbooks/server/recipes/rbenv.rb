@@ -60,7 +60,7 @@ node['rbenv']['versions'].each do |rbenv_version|
     group username
     environment ({'HOME' => "#{user_home}", 'USER' => username, 'PATH' => "#{user_home}/.rbenv/shims:#{user_home}/.rbenv/bin:#{default_environment_path}" })
     cwd "#{user_home}"
-    command "rbenv install #{rbenv_version}  && rbenv rehash"
+    command "rbenv install #{rbenv_version}; rbenv rehash; exit 0;"
     not_if do
       File.exists?("#{user_home}/.rbenv/versions/#{rbenv_version}")
     end

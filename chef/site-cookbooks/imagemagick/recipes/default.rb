@@ -22,5 +22,5 @@ when "redhat", "centos", "fedora"
   package "ImageMagick"
 when "debian", "ubuntu"
   package "imagemagick"
-  package "libmagick9-dev"
+  package "libmagick-dev"
 end
