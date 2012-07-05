@@ -32,23 +32,11 @@ iptables_rule "default_rules" do
   source 'iptables/default_rules.erb'
 end
 
-# for development, given by mysql recipe
-iptables_rule "port_mysql" do
-  source 'iptables/port_mysql.erb'
-end
-
 iptables_rule "drop_and_logging" do
   source 'iptables/drop_and_logging.erb'
 end
 
-#execute "add source for newest nginx" do
-#  command "add-apt-repository ppa:nginx/stable"
-#
-# # command "add-apt-repository http://nginx.org/packages/ubuntu"
-# # command "curl -C - -O http://nginx.org/keys/nginx_signing.key && apt-key add nginx_signing.key"
-#end
 require_recipe "nginx::source"
-
 require_recipe "unicorn"
 require_recipe "memcached"
 require_recipe "imagemagick::rmagick"
