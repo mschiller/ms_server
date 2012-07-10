@@ -36,52 +36,6 @@ iptables_rule "drop_and_logging" do
   source 'iptables/drop_and_logging.erb'
 end
 
-require_recipe "nginx::source"
-require_recipe "unicorn"
-require_recipe "memcached"
-require_recipe "imagemagick::rmagick"
-require_recipe "redis"
-require_recipe "postfix"
-
-include_recipe "ruby_build"
-include_recipe "rbenv::user"
-
-include_recipe "server::ssh"
-include_recipe "server::application"
-include_recipe "server::bash_support"
-#include_recipe "server::backup"
-include_recipe "server::newrelic"
-include_recipe "server::wkhtmltopdf"
-
-package "apache2-utils" do # install htpasswd2
-  action :install
-end
-
-execute "create passwd file" do
-  command "htpasswd -c -b #{node.nginx.dir}/passwd #{node.htpasswd.username} #{node.htpasswd.password}"
-  notifies :restart, resources(:service => "nginx")
-end
-
-node[:jenkins][:http_proxy][:host_name] = "jenkins.#{node.application.domain}"
-node[:jenkins][:http_proxy][:variant] = 'nginx'
-require_recipe "jenkins"
-
-%w(xvfb).each do |pkg|
-  package pkg
-end
-
-include_recipe "logrotate"
-
-logrotate_app 'nginx' do
-  path      File.join(node[:nginx][:log_dir], "*.log")
-  rotate     35
-  period     "daily"
-  postrotate "test ! -f /var/run/nginx.pid || kill -USR1 `cat /var/run/nginx.pid`"
-end
-
-node[:tz] = 'Europe/Berlin'
-require_recipe "timezone"
-
 # ssl
 directory "#{node[:nginx][:dir]}/cert" do
   owner "root"
@@ -110,3 +64,50 @@ node[:certificates].each do |cert|
     end
   end
 end if node[:certificates]
+
+require_recipe "nginx::source"
+require_recipe "unicorn"
+require_recipe "memcached"
+require_recipe "imagemagick::rmagick"
+require_recipe "redis"
+require_recipe "postfix"
+
+include_recipe "ruby_build"
+include_recipe "rbenv::user"
+
+include_recipe "server::ssh"
+include_recipe "server::application"
+include_recipe "server::bash_support"
+#include_recipe "server::backup"
+include_recipe "server::newrelic"
+include_recipe "server::wkhtmltopdf"
+
+package "apache2-utils" do # install htpasswd2
+  action :install
+end
+
+execute "create passwd file" do
+  command "htpasswd -c -b #{node.nginx.dir}/passwd #{node.htpasswd.username} #{node.htpasswd.password}"
+  notifies :restart, resources(:service => "nginx")
+end
+
+node[:jenkins][:http_proxy][:host_name] = "jenkins.#{node.application.domain}"
+node[:jenkins][:http_proxy][:variant] = 'nginx'
+#node[:jenkins][:http_proxy][:listen_ports] = [ 443 ]
+require_recipe "jenkins"
+
+%w(xvfb).each do |pkg|
+  package pkg
+end
+
+include_recipe "logrotate"
+
+logrotate_app 'nginx' do
+  path      File.join(node[:nginx][:log_dir], "*.log")
+  rotate     35
+  period     "daily"
+  postrotate "test ! -f /var/run/nginx.pid || kill -USR1 `cat /var/run/nginx.pid`"
+end
+
+node[:tz] = 'Europe/Berlin'
+require_recipe "timezone"

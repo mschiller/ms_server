@@ -3,13 +3,9 @@
 #
 
 deb <%= node['ubuntu']['archive_url'] %> <%= @code_name %> main restricted universe multiverse
-deb-src <%= node['ubuntu']['archive_url'] %> <%= @code_name %> main restricted universe multiverse
-
 deb <%= node['ubuntu']['archive_url'] %> <%= @code_name %>-updates main restricted universe multiverse
-deb-src <%= node['ubuntu']['archive_url'] %> <%= @code_name %>-updates main restricted universe multiverse
 
 # 
 # Security updates 
 #
 deb <%= node['ubuntu']['security_url'] %> <%= @code_name %>-security main restricted universe multiverse 
-deb-src <%= node['ubuntu']['security_url'] %> <%= @code_name %>-security main restricted universe multiverse 
