@@ -32,10 +32,6 @@ iptables_rule "default_rules" do
   source 'iptables/default_rules.erb'
 end
 
-iptables_rule "drop_and_logging" do
-  source 'iptables/drop_and_logging.erb'
-end
-
 # ssl
 directory "#{node[:nginx][:dir]}/cert" do
   owner "root"
@@ -111,3 +107,15 @@ end
 
 node[:tz] = 'Europe/Berlin'
 require_recipe "timezone"
+
+# tests
+
+%w(firefox).each do |pkg|
+  package pkg
+end
+
+%w(ubufox xul-ext-ubufox).each do |pkg|
+  package pkg do
+    action :purge
+  end
+end
