@@ -26,6 +26,8 @@ end
 require_recipe "mysql"
 include_recipe "mysql::server"
 
+require_recipe "sphinx"
+
 require_recipe "iptables"
 
 iptables_rule "default_rules" do
