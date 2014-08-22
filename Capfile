@@ -1,5 +1,6 @@
 #
 # Chef-Solo Capistrano Bootstrap
+# ubuntu 14.04
 #
 # usage:
 #   cap chef:init root@<remote_host>
@@ -79,7 +80,7 @@ namespace :chef do
 
   desc "install Ruby"
   task :install_ruby, roles: :target do
-     sudo 'apt-get install -y ruby1.8-dev ruby1.8 rubygems libopenssl-ruby'
+     sudo 'apt-get install -y build-essential ruby1.9.1-dev ruby1.9.1'
   end
 
   desc "Install Chef and Ohai gems as root"
@@ -155,7 +156,7 @@ end
 # helpers
 def create_user(user, pass, group, pubkey)
   run "groupadd #{user}; exit 0"
-  run "useradd -s /bin/bash -m -g #{group} -p #{pass} #{user}; exit 0"
+  run "useradd -s /bin/bash -m -g #{group} #{user}; exit 0"  # -p #{pass}
   run "usermod -s /bin/bash -a -G sudo #{user}; exit 0"
   ssh_dir = "/home/#{user}/.ssh"
   run "mkdir -pm700 #{ssh_dir} && touch #{ssh_dir}/authorized_keys && chmod 600 #{ssh_dir}/authorized_keys && echo '#{pubkey}' >> #{ssh_dir}/authorized_keys && chown -R #{user}.#{group} #{ssh_dir}; exit 0"

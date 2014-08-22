@@ -1,25 +1,51 @@
 #
-# Author:: Christian Trabold <christian.trabold@dkd.de>
-# Cookbook Name:: redis
-# Attributes:: default
+# Locations
 #
-# Copyright 2011, dkd Internet Service GmbH
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
-default['redis']['bind']         = "127.0.0.1"
-default['redis']['port']         = "6379"
-default['redis']['config_path']  = "/etc/redis/redis.conf"
-default['redis']['daemonize']    = "no"
-default['redis']['timeout']      = "300"
-default['redis']['loglevel']     = "notice"
+default[:redis][:conf_dir]          = "/etc/redis"
+default[:redis][:log_dir]           = "/var/log/redis"
+default[:redis][:data_dir]          = "/var/lib/redis"
+
+default[:redis][:home_dir]          = "/usr/local/share/redis"
+default[:redis][:pid_file]          = "/var/run/redis.pid"
+
+default[:redis][:db_basename]       = "dump.rdb"
+
+default[:redis ][:user]              = 'redis'
+default[:users ]['redis'][:uid]      = 335
+default[:groups]['redis'][:gid]      = 335
+
+#
+# Server
+#
+
+default[:redis][:server][:addr]     = "0.0.0.0"
+default[:redis][:server][:port]     = "6379"
+
+#
+# Install
+#
+
+default[:redis][:version]           = "2.0.2"
+default[:redis][:release_url]       = "http://redis.googlecode.com/files/redis-:version:.tar.gz"
+
+#
+# Tunables
+#
+
+default[:redis][:server][:timeout]  = "300"
+default[:redis][:glueoutputbuf]     = "yes"
+
+default[:redis][:saves]             = [["900", "1"], ["300", "10"], ["60", "10000"]]
+
+default[:redis][:slave]             = "no"
+if (node[:redis][:slave] == "yes")
+  # TODO: replace with discovery
+  default[:redis][:master_server]   = "redis-master." + domain
+  default[:redis][:master_port]     = "6379"
+end
+
+default[:redis][:shareobjects]      = "no"
+if (node[:redis][:shareobjects] == "yes")
+  default[:redis][:shareobjectspoolsize] = 1024
+end

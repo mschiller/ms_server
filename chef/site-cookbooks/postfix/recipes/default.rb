@@ -1,9 +1,9 @@
-#
-# Author:: Joshua Timberman(<joshua@opscode.com>)
+# encoding: utf-8
+# Author:: Joshua Timberman(<joshua@getchef.com>)
 # Cookbook Name:: postfix
 # Recipe:: default
 #
-# Copyright 2009, Opscode, Inc.
+# Copyright 2009-2014, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,20 +18,24 @@
 # limitations under the License.
 #
 
-package "postfix" do
-  action :install
+include_recipe 'postfix::_common'
+
+if node['postfix']['main']['smtp_sasl_auth_enable'] == 'yes'
+  include_recipe 'postfix::sasl_auth'
 end
 
-service "postfix" do
-  action :enable
+if node['postfix']['use_alias_maps']
+  include_recipe 'postfix::aliases'
 end
 
-%w{main master}.each do |cfg|
-  template "/etc/postfix/#{cfg}.cf" do
-    source "#{cfg}.cf.erb"
-    owner "root"
-    group "root"
-    mode 0644
-    notifies :restart, resources(:service => "postfix")
-  end
+if node['postfix']['use_transport_maps']
+  include_recipe 'postfix::transports'
+end
+
+if node['postfix']['use_access_maps']
+  include_recipe 'postfix::access'
+end
+
+if node['postfix']['use_virtual_aliases']
+  include_recipe 'postfix::virtual_aliases'
 end

@@ -1,2 +1,11 @@
+.vagrant
+Berksfile.lock
 Gemfile.lock
-tmp/
+*~
+*#
+.#*
+\#*#
+.*.sw[a-z]
+*.un~
+/cookbooks
+.kitchen

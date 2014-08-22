@@ -36,7 +36,7 @@ Backup::Configuration::Database::MySQL.defaults do |db|
   db.mysqldump_utility = '/usr/bin/mysqldump'
 end
 
-<% @backuped_projects.each do |project| -%>
+<% @backuped_projects.to_a.each do |project| -%>
 
   Backup::Model.new(<%= ":#{project[:name].to_s}_backup" %>, '<%= project[:backup_desc] %>') do
 
@@ -54,11 +54,11 @@ end
       db.host               = '<%= @database_host %>'
       db.port               = '<%= @database_port %>'
       db.socket             = '/var/run/mysqld/mysqld.sock'
-      db.skip_tables        = [<%= project[:skip_database_tables].collect {|x| "\"#{x}\"" }.join(',') %>]
+      db.skip_tables        = [<%= project[:skip_database_tables].to_a.collect {|x| "\"#{x}\"" }.join(',') %>]
     end
 
     archive :assets do |archive|
-      <% project[:shared_assets].each do |shared_asset_folder| -%>
+      <% project[:shared_assets].to_a.each do |shared_asset_folder| -%>
       archive.add "/var/projects/<%= project[:name] %>/production/shared/<%= shared_asset_folder %>"
       <% end -%>
     end
@@ -107,7 +107,7 @@ end
     #  #rsync.additional_options = ['--some-option']
     #
     #  rsync.directories do |directory|
-    #    <% project[:shared_assets].each do |shared_asset_folder| -%>
+    #    <% project[:shared_assets].to_a.each do |shared_asset_folder| -%>
     #      directory.add "/var/projects/<%= project[:name] %>/production/shared/<%= shared_asset_folder %>"
     #    <% end -%>
     #    directory.add "/var/projects/<%= project[:name] %>/production/shared/log"

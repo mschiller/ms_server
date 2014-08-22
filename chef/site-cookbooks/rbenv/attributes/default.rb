@@ -2,9 +2,9 @@
 # Cookbook Name:: rbenv
 # Attributes:: default
 #
-# Author:: Fletcher Nichol <fnichol@nichol.ca>
+# Author:: Jamie Winsor (<jamie@vialstudios.com>)
 #
-# Copyright 2011, Fletcher Nichol
+# Copyright 2011-2012, Riot Games
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,39 +19,18 @@
 # limitations under the License.
 #
 
-# git repository containing rbenv
-default['rbenv']['git_url'] = "git://github.com/sstephenson/rbenv.git"
-default['rbenv']['git_ref'] = "master"
+default[:rbenv][:user]           = "rbenv"
+default[:rbenv][:group]          = "rbenv"
+default[:rbenv][:manage_home]    = true
+default[:rbenv][:group_users]    = Array.new
+default[:rbenv][:git_repository] = "https://github.com/sstephenson/rbenv.git"
+default[:rbenv][:git_revision]   = "master"
+default[:rbenv][:install_prefix] = "/opt"
+default[:rbenv][:root_path]      = "#{node[:rbenv][:install_prefix]}/rbenv"
+default[:rbenv][:user_home]      = "/home/#{node[:rbenv][:user]}"
 
-# upgrade action strategy
-default['rbenv']['upgrade'] = "none"
+default[:ruby_build][:git_repository] = "https://github.com/sstephenson/ruby-build.git"
+default[:ruby_build][:git_revision]   = "master"
 
-# extra system-wide tunables
-default['rbenv']['root_path'] = "/usr/local/rbenv"
-default['rbenv']['vagrant']['system_chef_solo'] = "/opt/ruby/bin/chef-solo"
-
-# a list of user hashes, each an isolated per-user rbenv installation
-default['rbenv']['user_installs'] = []
-
-# list of additional rubies that will be installed
-default['rbenv']['rubies']      = []
-default['rbenv']['user_rubies'] = []
-
-# hash of gems and their list of additional gems to be installed.
-default['rbenv']['gems']      = Hash.new
-default['rbenv']['user_gems'] = Hash.new
-
-case platform
-when "redhat","centos","fedora", "amazon", "scientific"
-  node.set['rbenv']['install_pkgs']   = %w{git grep}
-  default['rbenv']['user_home_root']  = '/home'
-when "debian","ubuntu","suse"
-  node.set['rbenv']['install_pkgs']   = %w{git-core grep}
-  default['rbenv']['user_home_root']  = '/home'
-when "mac_os_x"
-  node.set['rbenv']['install_pkgs']   = %w{git}
-  default['rbenv']['user_home_root']  = '/Users'
-when "freebsd"
-  node.set['rbenv']['install_pkgs']   = %w{git}
-  default['rbenv']['user_home_root']  = '/usr/home'
-end
+default[:rbenv_vars][:git_repository] = "https://github.com/sstephenson/rbenv-vars.git"
+default[:rbenv_vars][:git_revision]   = "master"

@@ -17,36 +17,67 @@
 # limitations under the License.
 #
 
-define :logrotate_app, :enable => true, :frequency => "weekly", :template => "logrotate.erb", :cookbook => "logrotate" do
-  include_recipe "logrotate"
+log_rotate_params = {
+  :enable         => true,
+  :frequency      => 'weekly',
+  :template       => 'logrotate.erb',
+  :cookbook       => 'logrotate',
+  :template_mode  => '0440',
+  :template_owner => 'root',
+  :template_group => 'root',
+  :postrotate     => nil,
+  :prerotate      => nil,
+  :firstaction    => nil,
+  :lastaction     => nil,
+  :sharedscripts  => false
+}
 
-  path = params[:path].respond_to?(:each) ? params[:path] : params[:path].split
-  create = params[:create] ? params[:create] : "644 root adm"
+define(:logrotate_app, log_rotate_params) do
+  include_recipe 'logrotate::default'
+
+  acceptable_options = %w(missingok compress delaycompress dateext dateyesterday copytruncate notifempty delaycompress ifempty mailfirst nocompress nocopy nocopytruncate nocreate nodelaycompress nomail nomissingok noolddir nosharedscripts notifempty sharedscripts nodateext)
+  options_tmp = params[:options] ||= %w(missingok compress delaycompress copytruncate notifempty)
+  options = options_tmp.respond_to?(:each) ? options_tmp : options_tmp.split
 
   if params[:enable]
+    invalid_options = options - acceptable_options
+
+    unless invalid_options.empty?
+      Chef::Application.fatal! "The passed value(s) [#{invalid_options.join(',')}] are not valid"
+    end
 
     template "/etc/logrotate.d/#{params[:name]}" do
-      source params[:template]
+      source   params[:template]
       cookbook params[:cookbook]
-      mode 0440
-      owner "root"
-      group "root"
-      backup false
+      mode     params[:template_mode]
+      owner    params[:template_owner]
+      group    params[:template_group]
+      backup   false
       variables(
-        :path => path,
-        :create => create,
-        :frequency => params[:frequency],
-        :rotate => params[:rotate]
+        :path          => Array(params[:path]).map { |path| path.to_s.inspect }.join(' '),
+        :create        => params[:create],
+        :frequency     => params[:frequency],
+        :dateformat    => params[:dateformat],
+        :size          => params[:size],
+        :minsize       => params[:minsize],
+        :maxsize       => params[:maxsize],
+        :su            => params[:su],
+        :rotate        => params[:rotate],
+        :olddir        => params[:olddir],
+        :compresscmd   => params[:compresscmd],
+        :uncompresscmd => params[:uncompresscmd],
+        :compressext   => params[:compressext],
+        :sharedscripts => params[:sharedscripts],
+        :postrotate    => Array(params[:postrotate]).join("\n"),
+        :prerotate     => Array(params[:prerotate]).join("\n"),
+        :firstaction   => Array(params[:firstaction]).join("\n"),
+        :lastaction    => Array(params[:lastaction]).join("\n"),
+        :options       => options
       )
     end
-
   else
-
-    execute "rm /etc/logrotate.d/#{params[:name]}" do
-      only_if FileTest.exists?("/etc/logrotate.d/#{params[:name]}")
-      command "rm /etc/logrotate.d/#{params[:name]}"
+    file "/etc/logrotate.d/#{params[:name]}" do
+      action :delete
     end
-
   end
 end
-

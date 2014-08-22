@@ -2,19 +2,16 @@
 rbenv_install_gem 'backup' do
   gem_name 'backup'
   version  '3.0.21'
-  for_user 'deploy'
 end
 
 rbenv_install_gem 'dropbox-sdk' do
   gem_name 'dropbox-sdk'
   version  '1.1.0'
-  for_user 'deploy'
 end
 
 rbenv_install_gem 'mail' do
   gem_name 'mail'
   version  '2.2.15'
-  for_user 'deploy'
 end
 
 package 'bzip2' do

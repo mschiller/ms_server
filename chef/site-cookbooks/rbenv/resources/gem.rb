@@ -2,9 +2,9 @@
 # Cookbook Name:: rbenv
 # Resource:: gem
 #
-# Author:: Fletcher Nichol <fnichol@nichol.ca>
+# Author:: Jamie Winsor (<jamie@vialstudios.com>)
 #
-# Copyright 2011, Fletcher Nichol
+# Copyright 2011-2012, Riot Games
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,20 +21,17 @@
 
 actions :install, :upgrade, :remove, :purge
 
-attribute :package_name,  :kind_of => String, :name_attribute => true
-attribute :rbenv_version, :kind_of => String, :default => "global"
-attribute :version,       :kind_of => String
-attribute :response_file, :kind_of => String
-attribute :source,        :kind_of => String
-attribute :options,       :kind_of => Hash
-attribute :gem_binary,    :kind_of => String
-attribute :user,          :kind_of => String
-attribute :root_path,     :kind_of => String
-
-include Chef::Rbenv::Mixin::ResourceString
+attribute :package_name,    :kind_of => String, :name_attribute => true
+attribute :ruby_version,    :kind_of => String
+attribute :version,         :kind_of => String
+attribute :source,          :kind_of => String
+attribute :gem_binary,      :kind_of => String
+attribute :response_file,   :kind_of => String
+attribute :options,         :kind_of => Hash
 
 def initialize(*args)
   super
-  @action = :install
-  @provider = Chef::Provider::Package::RbenvRubygems
+  @action        = :install
+  @resource_name = :rbenv_gem
+  @provider      = Chef::Provider::Package::RbenvRubygems
 end

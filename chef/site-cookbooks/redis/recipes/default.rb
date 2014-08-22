@@ -1,9 +1,10 @@
 #
-# Author:: Christian Trabold <christian.trabold@dkd.de>
-# Cookbook Name:: redis
-# Recipe:: default
+# Cookbook Name::       redis
+# Description::         Base configuration for redis
+# Recipe::              default
+# Author::              Benjamin Black (<b@b3k.us>)
 #
-# Copyright 2011, dkd Internet Service GmbH
+# Copyright 2009, Benjamin Black
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,4 +19,16 @@
 # limitations under the License.
 #
 
-include_recipe "redis::package"
+include_recipe 'metachef'
+
+standard_dirs('redis.server') do
+  directories   :conf_dir
+end
+
+template "#{node[:redis][:conf_dir]}/redis.conf" do
+  source        "redis.conf.erb"
+  owner         "root"
+  group         "root"
+  mode          "0644"
+  variables     :redis => node[:redis], :redis_server => node[:redis][:server]
+end
