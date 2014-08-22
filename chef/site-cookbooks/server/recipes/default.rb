@@ -67,6 +67,10 @@ execute "set as default" do
   command "rbenv global 1.9.3-p194"
 end
 
+rbenv_install_gem 'bundler' do
+  gem_name 'bundler'
+end
+
 include_recipe "server::ssh"
 include_recipe "server::application"
 include_recipe "server::bash_support"

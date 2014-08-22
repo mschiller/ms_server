@@ -12,4 +12,7 @@ define :rbenv_install_gem, :name => nil, :version => nil, :for_user => 'deploy',
     command "gem install #{params[:gem_name]} #{version} --no-ri --no-rdoc"
     not_if  "HOME='#{user_home}' USER=#{params[:for_user]} PATH=#{user_home}/.rbenv/shims:#{user_home}/.rbenv/bin:#{params[:default_environment_path]} gem list --installed #{params[:gem_name]} #{version}"
   end
+  execute "command" do
+    command "rbenv rehash"
+  end
 end
