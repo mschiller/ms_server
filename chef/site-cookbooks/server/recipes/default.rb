@@ -61,10 +61,10 @@ include_recipe "rbenv::default"
 include_recipe "rbenv::ruby_build"
 include_recipe "rbenv::rbenv_vars"
 
-rbenv_ruby "2.0.0-p353"
+rbenv_ruby "2.0.0-p481"
 
 execute "set as default" do
-  command "rbenv global 2.0.0-p353"
+  command "rbenv global 2.0.0-p481"
 end
 
 rbenv_install_gem 'bundler' do
