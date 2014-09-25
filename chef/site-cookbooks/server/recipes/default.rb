@@ -5,7 +5,7 @@ include_recipe "git"
 include_recipe "screen"
 include_recipe "java"
 
-%w(libxml++2.6-dev libxslt1-dev zip libssl-dev libxml2-dev libreadline6-dev libghc-curl-dev curl libqt4-dev nmap imagemagick python-software-properties).each do |pkg|
+%w(libxml++2.6-dev libxslt1-dev zip libssl-dev libxml2-dev libreadline6-dev libghc-curl-dev curl libqt4-dev nmap imagemagick python-software-properties libjpeg-progs).each do |pkg|
   package pkg
 end
 
