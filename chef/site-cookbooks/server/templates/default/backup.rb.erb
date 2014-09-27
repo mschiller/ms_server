@@ -38,7 +38,7 @@ end
 
 <% @backuped_projects.to_a.each do |project| -%>
 
-  Backup::Model.new(<%= ":#{project[:name].to_s}_backup" %>, '<%= project[:backup_desc] %>') do
+  Backup::Model.new(<%= ":#{project['name'].to_s}_backup" %>, '<%= project['backup_desc'] %>') do
 
     compress_with Bzip2 do |compression|
       compression.best = true
@@ -49,26 +49,25 @@ end
     # MySQL [Database]
     #
     database MySQL do |db|
-      db.name               = '<%= project[:database_name] %>'
+      db.name               = '<%= project['database_name'] %>'
 
       db.host               = '<%= @database_host %>'
       db.port               = '<%= @database_port %>'
       db.socket             = '/var/run/mysqld/mysqld.sock'
-      db.skip_tables        = [<%= project[:skip_database_tables].to_a.collect {|x| "\"#{x}\"" }.join(',') %>]
+      db.skip_tables        = [<%= project['skip_database_tables'].to_a.collect {|x| "\"#{x}\"" }.join(',') %>]
     end
 
     archive :assets do |archive|
-      <% project[:shared_assets].to_a.each do |shared_asset_folder| -%>
-      archive.add "/var/projects/<%= project[:name] %>/production/shared/<%= shared_asset_folder %>"
+      <% project['shared_assets'].to_a.each do |shared_asset_folder| -%>
+      archive.add "/var/projects/<%= project['name'] %>/production/shared/<%= shared_asset_folder %>"
       <% end -%>
     end
 
-    archive :logs do |archive|
-      archive.add     "/var/projects/<%= project[:name] %>/production/shared/log/production.log"
-      archive.add     "/var/projects/<%= project[:name] %>/production/shared/log/unicorn.<%= project[:name] %>.stderr.log"
-      archive.add     "/var/projects/<%= project[:name] %>/production/shared/log/unicorn.<%= project[:name] %>.stdout.log"
-      #archive.exclude 'exclude-this.log'
-    end
+    # archive :logs do |archive|
+    #   archive.add     "/var/projects/<%= project['name'] %>/production/shared/log/production.log"
+    #   archive.add     "/var/projects/<%= project['name'] %>/production/shared/log/unicorn.stderr.log"
+    #   archive.add     "/var/projects/<%= project['name'] %>/production/shared/log/unicorn.stdout.log"
+    # end
 
     store_with FTP do |server|
       server.username = '<%= @ftp_username %>'
@@ -77,6 +76,7 @@ end
       server.port     = 21
       server.path     = 'backups/'
       server.keep     = 5
+      server.passive_mode = true
     end
 
     #store_with Dropbox do |db|
@@ -107,15 +107,15 @@ end
     #  #rsync.additional_options = ['--some-option']
     #
     #  rsync.directories do |directory|
-    #    <% project[:shared_assets].to_a.each do |shared_asset_folder| -%>
-    #      directory.add "/var/projects/<%= project[:name] %>/production/shared/<%= shared_asset_folder %>"
+    #    <% project['shared_assets'].to_a.each do |shared_asset_folder| -%>
+    #      directory.add "/var/projects/<%= project['name'] %>/production/shared/<%= shared_asset_folder %>"
     #    <% end -%>
-    #    directory.add "/var/projects/<%= project[:name] %>/production/shared/log"
+    #    directory.add "/var/projects/<%= project['name'] %>/production/shared/log"
     #  end
     #end
 
     notify_by Mail do |mail|
-      mail.on_success = false
+      mail.on_success = true
       mail.on_failure = true
     end
 

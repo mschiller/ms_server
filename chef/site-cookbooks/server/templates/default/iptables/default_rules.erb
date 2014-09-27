@@ -21,7 +21,7 @@
 -A OUTPUT -o eth0 -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT
 
 # FTP
--A INPUT -p tcp --dport 20 -j ACCEPT
+-A OUTPUT -p tcp --sport 20 -j ACCEPT
 -A INPUT -p tcp --dport 21 -j ACCEPT
 
 # DNS
