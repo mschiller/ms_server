@@ -84,7 +84,7 @@ cron "cron task for backup" do
   hour '5'
   minute '0'
   #weekday '1'
-  command "/home/#{node[:deployer_user][:username]}/bin/backup.sh 2>&1 >/dev/null"
+  command "/bin/bash -l -c '/home/#{node[:deployer_user][:username]}/bin/backup.sh 2>&1 >/dev/null'"
   mailto node[:backup][:mail][:to]
   only_if do File.exist?("/home/#{node[:deployer_user][:username]}/bin/backup.sh") end
 end
